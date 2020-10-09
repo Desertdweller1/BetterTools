@@ -1,0 +1,30 @@
+name: BetterTools
+main: me.desertdweller.bettertools.BetterTools
+version: 0.1
+author: Desertdweller
+api-version: 1.13
+commands:
+  bt:
+    description: General BetterTools command.
+    usage: /bt
+  bt help:
+    description: Gives help for BetterTools.
+    usage: /bt help <command>
+  bt tool:
+    description: Gives the painter tool.
+    usage: /bt tool
+  bt toolparams:
+    description: Adjust the parameters of the paint tool. Add in further parameters to enable perlin noise usage.
+    usage: /bt toolparams <radius> [<scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>]
+  bt toolmask:
+    description: Adds a list of blocks as a mask to the tool. Use official material names, and separate them with commas, no spaces.
+    usage: /bt toolmask <block list>
+  bt toolblocks:
+    description: Sets the tool's blocks.
+    usage: /bt toolblocks <block list>
+  bt toolthrough:
+    description: Sets the blocks the tool will go through when selecting the origin.
+    usage: /bt toolthrough <block list>
+  bt undo:
+    description: Undos the previous action.
+    usage: /bt undo
