@@ -21,7 +21,7 @@ public class Commands implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if(args.length < 1 || args[0].equalsIgnoreCase("help") && sender.isOp()) {
+		if(args.length < 1 || args[0].equalsIgnoreCase("help")) {
 			if(args.length < 1 || (args[0].equalsIgnoreCase("help") && args.length == 1)) {
 				sender.sendMessage(ChatColor.GOLD + "/bt tool");
 				sender.sendMessage(ChatColor.GRAY + "This gives you the tool which how you will be able to use BetterTools. Almost all BT commands will be to adjust this tool. Everything you do to this tool will be saved, can be duplicated by copying the item, and so on.");
@@ -64,7 +64,11 @@ public class Commands implements CommandExecutor{
 				}
 			}
 			return true;
-		}else if(args[0].equalsIgnoreCase("tool") && sender.isOp()) {
+		}else if(args[0].equalsIgnoreCase("tool")) {
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			
 			NBTItem nbti = new NBTItem(new ItemStack(Material.GOLDEN_HOE));
@@ -93,7 +97,11 @@ public class Commands implements CommandExecutor{
 			item.setItemMeta(meta);
 			p.getInventory().addItem(item);
 			return true;
-		}else if(args[0].equalsIgnoreCase("toolmask") && sender.isOp()) {
+		}else if(args[0].equalsIgnoreCase("toolmask")) {
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
@@ -122,7 +130,11 @@ public class Commands implements CommandExecutor{
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
 			}
 			return true;
-		}else if(args[0].equalsIgnoreCase("toolblocks") && sender.isOp()) {
+		}else if(args[0].equalsIgnoreCase("toolblocks")) {
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
@@ -146,7 +158,11 @@ public class Commands implements CommandExecutor{
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
 			}
 			return true;
-		}else if(args[0].equalsIgnoreCase("undo") && sender.isOp()){
+		}else if(args[0].equalsIgnoreCase("undo")){
+			if(!sender.hasPermission("bt.use")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(p.getUniqueId());
 			if(tracker == null || tracker.getUndosAvailable() == 0) {
@@ -155,7 +171,11 @@ public class Commands implements CommandExecutor{
 			}
 			p.sendMessage(ChatColor.GRAY + "Undone " + tracker.undo() + " blocks.");
 			return true;
-		}else if(args[0].equalsIgnoreCase("toolthrough") && sender.isOp()){
+		}else if(args[0].equalsIgnoreCase("toolthrough")){
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
@@ -179,7 +199,11 @@ public class Commands implements CommandExecutor{
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
 			}
 			return true;
-		}else if(args[0].equalsIgnoreCase("toolparams") && sender.isOp()) {
+		}else if(args[0].equalsIgnoreCase("toolparams")) {
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {

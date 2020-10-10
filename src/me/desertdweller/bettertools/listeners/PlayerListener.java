@@ -16,6 +16,7 @@ import me.desertdweller.bettertools.math.BlockMath;
 import me.desertdweller.bettertools.math.Noise;
 import me.desertdweller.bettertools.undo.Alteration;
 import me.desertdweller.bettertools.undo.ChangeTracker;
+import net.md_5.bungee.api.ChatColor;
 import net.minecraft.server.v1_13_R2.BlockPosition;
 import net.minecraft.server.v1_13_R2.IBlockData;
 
@@ -29,34 +30,38 @@ public class PlayerListener implements Listener{
 		NBTItem nbti = new NBTItem(e.getItem());
 		if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && nbti.getString("Item").equals("Paint Tool")) {
 			e.setCancelled(true);
+			if(!e.getPlayer().hasPermission("bt.use")) {
+				e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to use that tool.");
+				return;
+			}
 			Block centerBlock = e.getPlayer().getTargetBlock(matListToSet(BlockMath.stringToMaterialList(nbti.getString("Through"))), 200);
 			List<Block> blocks;
 			Noise noise = new Noise(nbti.getString("Noise"));
-			long startTime = System.currentTimeMillis();
+			//long startTime = System.currentTimeMillis();
 			if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
 				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"), BlockMath.stringToMaterialList(nbti.getString("Mask")), noise);
 			}else {
 				blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
 			}
-			System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to find appropriate blocks to change.");
+			//System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to find appropriate blocks to change.");
 	        ChangeTracker tracker = ChangeTracker.getChangesForPlayer(e.getPlayer().getUniqueId());
 	        if(tracker == null)
 	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
 	        Alteration change = new Alteration();
-	        startTime = System.currentTimeMillis();
+	        //startTime = System.currentTimeMillis();
 			List<Material> matList = BlockMath.stringToMaterialList(nbti.getString("Blocks"));
 			for(int i = 0; i < blocks.size(); i++) {
 				Material targetMat = matList.get((int) (Math.random()*matList.size()));
 				if(!blocks.get(i).getType().equals(targetMat)) {
 					change.addBlock(blocks.get(i));	
 					blocks.get(i).setType(targetMat, false);
-					setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
+					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
 				}
 			}
 			if(change.getBlockList().keySet().size() > 0)
 				tracker.addChange(change);
 
-			System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to change the blocks.");
+			//System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to change the blocks.");
 		}
 	}
 	
@@ -68,10 +73,12 @@ public class PlayerListener implements Listener{
 		return output;
 	}
 	
+	@SuppressWarnings("unused")
 	private static void setBlockInNativeWorld(Block block, int blockId, boolean applyPhysics) {
 	    net.minecraft.server.v1_13_R2.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 	    BlockPosition bp = new BlockPosition(block.getX(), block.getY(), block.getZ());
-	    IBlockData ibd = net.minecraft.server.v1_13_R2.Block.getByCombinedId(blockId + (block.getData() << 12));
+	    @SuppressWarnings("deprecation")
+		IBlockData ibd = net.minecraft.server.v1_13_R2.Block.getByCombinedId(blockId + (block.getData() << 12));
 	    nmsWorld.setTypeAndData(bp, ibd, applyPhysics ? 3 : 2);
 	}
 }

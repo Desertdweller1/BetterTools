@@ -1,6 +1,6 @@
 name: BetterTools
 main: me.desertdweller.bettertools.BetterTools
-version: 0.1
+version: 0.1.1
 author: Desertdweller
 api-version: 1.13
 commands:
@@ -28,3 +28,10 @@ commands:
   bt undo:
     description: Undos the previous action.
     usage: /bt undo
+permissions:
+   bt.use:
+      description: Allows the player to use the tools.
+      default: op
+   bt.create:
+      description: Allows the player to create and edit the tools.
+      default: op
