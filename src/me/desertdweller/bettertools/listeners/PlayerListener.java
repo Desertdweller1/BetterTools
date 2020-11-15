@@ -6,19 +6,16 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import de.tr7zw.itemnbtapi.NBTItem;
+import de.tr7zw.nbtapi.NBTItem;
 import me.desertdweller.bettertools.math.BlockMath;
 import me.desertdweller.bettertools.math.Noise;
 import me.desertdweller.bettertools.undo.Alteration;
 import me.desertdweller.bettertools.undo.ChangeTracker;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.IBlockData;
 
 public class PlayerListener implements Listener{
 
@@ -73,12 +70,12 @@ public class PlayerListener implements Listener{
 		return output;
 	}
 	
-	@SuppressWarnings("unused")
-	private static void setBlockInNativeWorld(Block block, int blockId, boolean applyPhysics) {
-	    net.minecraft.server.v1_13_R2.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
-	    BlockPosition bp = new BlockPosition(block.getX(), block.getY(), block.getZ());
-	    @SuppressWarnings("deprecation")
-		IBlockData ibd = net.minecraft.server.v1_13_R2.Block.getByCombinedId(blockId + (block.getData() << 12));
-	    nmsWorld.setTypeAndData(bp, ibd, applyPhysics ? 3 : 2);
-	}
+//	@SuppressWarnings("unused")
+//	private static void setBlockInNativeWorld(Block block, int blockId, boolean applyPhysics) {
+//	    net.minecraft.server.v1_13_R2.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+//	    BlockPosition bp = new BlockPosition(block.getX(), block.getY(), block.getZ());
+//	    @SuppressWarnings("deprecation")
+//		IBlockData ibd = net.minecraft.server.v1_13_R2.Block.getByCombinedId(blockId + (block.getData() << 12));
+//	    nmsWorld.setTypeAndData(bp, ibd, applyPhysics ? 3 : 2);
+//	}
 }
