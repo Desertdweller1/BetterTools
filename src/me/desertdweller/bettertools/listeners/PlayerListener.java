@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -31,12 +32,12 @@ public class PlayerListener implements Listener{
 				e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to use that tool.");
 				return;
 			}
-			Block centerBlock = e.getPlayer().getTargetBlock(matListToSet(BlockMath.stringToMaterialList(nbti.getString("Through"))), 200);
+			Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(dataListToSet(BlockMath.stringToDataList(nbti.getString("Through"), false))), 200);
 			List<Block> blocks;
 			Noise noise = new Noise(nbti.getString("Noise"));
 			//long startTime = System.currentTimeMillis();
 			if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
-				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"), BlockMath.stringToMaterialList(nbti.getString("Mask")), noise);
+				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"), BlockMath.stringToDataList(nbti.getString("Mask"), false), noise);
 			}else {
 				blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
 			}
@@ -46,12 +47,14 @@ public class PlayerListener implements Listener{
 	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
 	        Alteration change = new Alteration();
 	        //startTime = System.currentTimeMillis();
-			List<Material> matList = BlockMath.stringToMaterialList(nbti.getString("Blocks"));
+			List<BlockData> matList = BlockMath.stringToDataList(nbti.getString("Blocks"), true);
 			for(int i = 0; i < blocks.size(); i++) {
-				Material targetMat = matList.get((int) (Math.random()*matList.size()));
-				if(!blocks.get(i).getType().equals(targetMat)) {
+				BlockData targetData = matList.get((int) (Math.random()*matList.size()));
+				if(!blocks.get(i).getBlockData().equals(targetData)) {
 					change.addBlock(blocks.get(i));	
-					blocks.get(i).setType(targetMat, false);
+					blocks.get(i).setBlockData(targetData, nbti.getBoolean("Updates"));
+					
+					
 					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
 				}
 			}
@@ -62,10 +65,18 @@ public class PlayerListener implements Listener{
 		}
 	}
 	
-	private static Set<Material> matListToSet(List<Material> list){
+	private static Set<BlockData> dataListToSet(List<BlockData> list){
+		Set<BlockData> output = new HashSet<BlockData>();
+		for(BlockData data : list) {
+			output.add(data);
+		}
+		return output;
+	}
+	
+	private static Set<Material> dataToMaterialSet(Set<BlockData> list){
 		Set<Material> output = new HashSet<Material>();
-		for(Material mat : list) {
-			output.add(mat);
+		for(BlockData data : list) {
+			output.add(data.getMaterial());
 		}
 		return output;
 	}

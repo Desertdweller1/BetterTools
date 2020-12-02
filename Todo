@@ -1,12 +1,18 @@
 More noise algorithms -possibility?-
 
-Configurable options
-Join message
-Block Data syntax (BIG)
-Brush update blocks option
-Rework the /toolparams command, and split it into different commands
+configurable tool material
+Blockdata material replacement default
 
 YT tutorial
+Look into packing item nbt with jar file
+
+configurable max size
+Join message
+
+Foliage Brush
+Ability to toggle placement of blocks through players
+
+Interacting with blocks adds and removes them from the brush
 
 
 Performance:

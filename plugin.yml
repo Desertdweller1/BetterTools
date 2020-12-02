@@ -1,6 +1,6 @@
 name: BetterTools
 main: me.desertdweller.bettertools.BetterTools
-version: 0.1.1
+version: 0.1.3
 author: Desertdweller
 api-version: 1.13
 commands:
@@ -11,23 +11,32 @@ commands:
     description: Gives help for BetterTools.
     usage: /bt help <command>
   bt tool:
-    description: Gives the painter tool.
-    usage: /bt tool
-  bt toolparams:
+    description: Gives the painter tool. It is also optional to set the radius as a second parameter.
+    usage: /bt tool [radius]
+  bt radius:
+    description: Sets the radius of the held tool.
+    usage: /bt radus <radius>
+  bt params:
     description: Adjust the parameters of the paint tool. Add in further parameters to enable perlin noise usage.
-    usage: /bt toolparams <radius> [<scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>]
-  bt toolmask:
+    usage: /bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>
+  bt mask:
     description: Adds a list of blocks as a mask to the tool. Use official material names, and separate them with commas, no spaces.
-    usage: /bt toolmask <block list>
-  bt toolblocks:
+    usage: /bt mask <block list>
+  bt blocks:
     description: Sets the tool's blocks.
-    usage: /bt toolblocks <block list>
-  bt toolthrough:
+    usage: /bt blocks <block list>
+  bt blockupdates:
+    description: Sets the brush to whether or not it will update blocks.
+    usage: /bt updateblocks <true/false>
+  bt through:
     description: Sets the blocks the tool will go through when selecting the origin.
-    usage: /bt toolthrough <block list>
+    usage: /bt through <block list>
   bt undo:
     description: Undos the previous action.
     usage: /bt undo
+  bt refreshtool:
+    description: Refreshes the lore for the tool you are holding.
+    usage: /bt refreshtool
 permissions:
    bt.use:
       description: Allows the player to use the tools.
