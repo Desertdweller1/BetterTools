@@ -1,6 +1,6 @@
 name: BetterTools
 main: me.desertdweller.bettertools.BetterTools
-version: 0.1.3
+version: 0.1.5
 author: Desertdweller
 api-version: 1.13
 commands:
@@ -13,6 +13,9 @@ commands:
   bt tool:
     description: Gives the painter tool. It is also optional to set the radius as a second parameter.
     usage: /bt tool [radius]
+  bt settool:
+    description: Set the held tool to the material.
+    usage: /bt settool <material>
   bt radius:
     description: Sets the radius of the held tool.
     usage: /bt radus <radius>
@@ -31,12 +34,20 @@ commands:
   bt through:
     description: Sets the blocks the tool will go through when selecting the origin.
     usage: /bt through <block list>
+  bt touching:
+    description: Sets the touching limit for the tool you are holding. Meaning that blocks will only be changed when they are next to whatever you set here. Use '/bt touching any' to reset.
+    usage: /bt touching <block list>
   bt undo:
-    description: Undos the previous action.
+    description: Undoes the previous action.
     usage: /bt undo
+  bt redo:
+    description: Redoes whatever was undone.
   bt refreshtool:
     description: Refreshes the lore for the tool you are holding.
     usage: /bt refreshtool
+  bt blockupdates:
+    description: Sets the tool to whether or not it updates blocks around it.
+    usage: /bt blockupdates <true/false>
 permissions:
    bt.use:
       description: Allows the player to use the tools.

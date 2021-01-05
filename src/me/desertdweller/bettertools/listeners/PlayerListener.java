@@ -1,5 +1,6 @@
 package me.desertdweller.bettertools.listeners;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,29 +33,30 @@ public class PlayerListener implements Listener{
 				e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to use that tool.");
 				return;
 			}
-			Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(dataListToSet(BlockMath.stringToDataList(nbti.getString("Through"), false))), 200);
+			Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockMath.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
 			List<Block> blocks;
 			Noise noise = new Noise(nbti.getString("Noise"));
 			//long startTime = System.currentTimeMillis();
 			if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
-				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"), BlockMath.stringToDataList(nbti.getString("Mask"), false), noise);
+				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(nbti.getString("Mask"), false), noise);
 			}else {
 				blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
+			}
+			if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
+				blocks = BlockMath.getBlocksTouching(blocks, BlockMath.stringToHashMap(nbti.getString("Touching"), false));
 			}
 			//System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to find appropriate blocks to change.");
 	        ChangeTracker tracker = ChangeTracker.getChangesForPlayer(e.getPlayer().getUniqueId());
 	        if(tracker == null)
 	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
 	        Alteration change = new Alteration();
-	        //startTime = System.currentTimeMillis();
-			List<BlockData> matList = BlockMath.stringToDataList(nbti.getString("Blocks"), true);
+			HashMap<BlockData, Boolean> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
 			for(int i = 0; i < blocks.size(); i++) {
-				BlockData targetData = matList.get((int) (Math.random()*matList.size()));
+				int id = (int) (Math.random()*matList.size());
+				BlockData targetData = (BlockData)  matList.keySet().toArray()[id];
 				if(!blocks.get(i).getBlockData().equals(targetData)) {
-					change.addBlock(blocks.get(i));	
-					blocks.get(i).setBlockData(targetData, nbti.getBoolean("Updates"));
-					
-					
+					change.addBlock(blocks.get(i));
+					setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData));
 					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
 				}
 			}
@@ -65,12 +67,11 @@ public class PlayerListener implements Listener{
 		}
 	}
 	
-	private static Set<BlockData> dataListToSet(List<BlockData> list){
-		Set<BlockData> output = new HashSet<BlockData>();
-		for(BlockData data : list) {
-			output.add(data);
+	private static void setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
+		if(!customProps && targetBlock.getBlockData().getClass().equals(targetData.getClass())) {
+			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
 		}
-		return output;
+		targetBlock.setBlockData(targetData, updates);
 	}
 	
 	private static Set<Material> dataToMaterialSet(Set<BlockData> list){

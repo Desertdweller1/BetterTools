@@ -1,19 +1,21 @@
 More noise algorithms -possibility?-
 
-configurable tool material
-Blockdata material replacement default
+redos
 
 YT tutorial
 Look into packing item nbt with jar file
 
-configurable max size
-Join message
+configurable max size (already a thing?)
+Map of what the algorithm looks like held in your off-hand when it's empty.
 
 Foliage Brush
 Ability to toggle placement of blocks through players
 
-Interacting with blocks adds and removes them from the brush
 
+
+
+
+Interacting with blocks adds and removes them from the brush
 
 Performance:
 

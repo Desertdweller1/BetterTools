@@ -23,24 +23,7 @@ public class Commands implements CommandExecutor{
 		
 		if(args.length < 1 || args[0].equalsIgnoreCase("help")) {
 			if(args.length < 1 || (args[0].equalsIgnoreCase("help") && args.length == 1)) {
-				sender.sendMessage(ChatColor.GOLD + "/bt tool");
-				sender.sendMessage(ChatColor.GRAY + "This gives you the tool which how you will be able to use BetterTools. Almost all BT commands will be to adjust this tool. Everything you do to this tool will be saved, can be duplicated by copying the item, and so on.");
-				sender.sendMessage(ChatColor.GOLD + "/bt radius <radius>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set its radius.");
-				sender.sendMessage(ChatColor.GOLD + "/bt blocks <block list>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it uses. The block list should be all the material names, without spaces, and seperated by commas. Putting the same material in the list multiple times increases its likelyhood of being used for each block replaced.");
-				sender.sendMessage(ChatColor.GOLD + "/bt mask <block list>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it chooses to replace. The block list should be all the material names, without spaces, and seperated by commas.");
-				sender.sendMessage(ChatColor.GOLD + "/bt through <block list>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it will ignore when choosing a landing. By default it is air, but if you are editing an ocean floor for example, you can add water to the list. The block list should be all the material names, without spaces, and seperated by commas.");
-				sender.sendMessage(ChatColor.GOLD + "/bt blockupdates <true/false>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will enable or disable block updates done by it.");
-				sender.sendMessage(ChatColor.GOLD + "/bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>");
-				sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will make the tool follow a noise generation algorithm to choose blocks (after checking the tool masks). If the tool has a noise algorithm already assigned, use '/bt noise off', or set the method as none to remove it again. For more information, you can use /bt help <parameter name> to find out more about what the parameter does.");
-				sender.sendMessage(ChatColor.GOLD + "/bt undo");
-				sender.sendMessage(ChatColor.GRAY + "This will undo your previous action. Up to 200 times.");
-				sender.sendMessage(ChatColor.GOLD + "/bt help <parameter/concept>");
-				sender.sendMessage(ChatColor.GRAY + "This command followed by almost any concept or parameter mentioned, will give a brief explaination of it.");
+				sendHelp(sender);
 			}else {
 				if(args[1].equalsIgnoreCase("scale")) {
 					sender.sendMessage(ChatColor.GRAY + "The 'scale' parameter for noise generation affects how large the noise is. This means there will be larger more continuous sections of random noise. If using Perlin noise, having it set to '1' will not work. This value is best used with decimals.");
@@ -86,6 +69,7 @@ public class Commands implements CommandExecutor{
 			nbti.setString("Mask", "air");
 			nbti.setString("Through", "air");
 			nbti.setBoolean("Updates", false);
+			nbti.setString("Touching", "");
 			Noise noise = new Noise();
 			noise.scale = 1;
 			noise.xScew = 1;
@@ -105,6 +89,28 @@ public class Commands implements CommandExecutor{
 			item.setItemMeta(meta);
 			p.getInventory().addItem(item);
 			return true;
+		}else if(args[0].equalsIgnoreCase("settool")){
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
+			Player p = (Player) sender;
+			ItemStack item = p.getInventory().getItemInMainHand();
+			NBTItem nbti = new NBTItem(item);
+			if(!nbti.hasKey("Item") || !nbti.getString("Item").equals("Paint Tool")) {
+				p.sendMessage(ChatColor.RED + "You need to hold a bt tool while using this command.");
+				return true;
+			}
+			if(args.length < 2) {
+				p.sendMessage("/bt settool <material>   ex. '/bt settool diamond_axe'");
+				return true;
+			}
+			if(Material.getMaterial(args[1].toUpperCase()) == null) {
+				p.sendMessage(ChatColor.RED + args[1] + " is not a valid material.");
+				return true;
+			}
+			item.setType(Material.getMaterial(args[1].toUpperCase()));
+			return true;
 		}else if(args[0].equalsIgnoreCase("radius")) {
 			if(!sender.hasPermission("bt.create")) {
 				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
@@ -113,10 +119,15 @@ public class Commands implements CommandExecutor{
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
-				nbti.setInteger("Radius", Integer.parseInt(args[0]));
+				nbti.setInteger("Radius", Integer.parseInt(args[1]));
 			}else {
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
 			}
+			ItemStack item = nbti.getItem();
+			ItemMeta meta = item.getItemMeta();
+			meta.setLore(getLore(nbti));
+			item.setItemMeta(meta);
+			p.getInventory().setItemInMainHand(item);
 			return true;
 		}else if(args[0].equalsIgnoreCase("mask")) {
 			if(!sender.hasPermission("bt.create")) {
@@ -220,18 +231,26 @@ public class Commands implements CommandExecutor{
 			}
 			return true;
 		}else if(args[0].equalsIgnoreCase("undo")){
-		
 			if(!sender.hasPermission("bt.use")) {
 				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
 				return true;
 			}
 			Player p = (Player) sender;
-			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(p.getUniqueId());
-			if(tracker == null || tracker.getUndosAvailable() == 0) {
-				p.sendMessage(ChatColor.RED + "You have nothing to undo.");
-				return true;
+			int timesToUndo = 1;
+			int totalBlocksUndone = 0;
+			if(args.length == 2) {
+				timesToUndo = Integer.parseInt(args[1]);
 			}
-			p.sendMessage(ChatColor.GRAY + "Undone " + tracker.undo() + " blocks.");
+			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(p.getUniqueId());
+			for(int i = 0; i < timesToUndo; i++) {
+				if(tracker == null || tracker.getUndosAvailable() == 0) {
+					p.sendMessage(ChatColor.RED + "You have nothing to undo.");
+					i = timesToUndo;
+				}else {
+					totalBlocksUndone += tracker.undo();
+				}
+			}
+			p.sendMessage(ChatColor.GRAY + "Undone " + totalBlocksUndone + " blocks.");
 			return true;
 		}else if(args[0].equalsIgnoreCase("through")){
 			if(!sender.hasPermission("bt.create")) {
@@ -256,6 +275,41 @@ public class Commands implements CommandExecutor{
 				}else {
 					p.sendMessage(ChatColor.WHITE + "/bt through <block list>");
 					p.sendMessage(ChatColor.WHITE + "Ex: '/bt through air,water'");
+				}
+			}else {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+			}
+			return true;
+		}else if(args[0].equalsIgnoreCase("touching")){
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
+			Player p = (Player) sender;
+			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
+			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
+				if(args.length > 1) {
+					String invalidName = BlockMath.checkStringList(args[1]);
+					if(invalidName == null) {
+						nbti.setString("Touching", args[1]);
+						ItemStack item = nbti.getItem();
+						ItemMeta meta = item.getItemMeta();
+						meta.setLore(getLore(nbti));
+						item.setItemMeta(meta);
+						p.getInventory().setItemInMainHand(item);
+					}else if(invalidName.equalsIgnoreCase("any") || invalidName.equalsIgnoreCase("empty")){
+						nbti.setString("Touching", "");
+						ItemStack item = nbti.getItem();
+						ItemMeta meta = item.getItemMeta();
+						meta.setLore(getLore(nbti));
+						item.setItemMeta(meta);
+						p.getInventory().setItemInMainHand(item);
+					}else {
+						p.sendMessage(ChatColor.RED + "'" + invalidName + "' is not a valid material!");
+					}
+				}else {
+					p.sendMessage(ChatColor.WHITE + "/bt touching <block list>");
+					p.sendMessage(ChatColor.WHITE + "Ex: '/bt touching air,water' or '/bt touching any'");
 				}
 			}else {
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
@@ -312,7 +366,35 @@ public class Commands implements CommandExecutor{
 			}
 			return true;
 		}
-		return false;
+		sendHelp(sender);
+		return true;
+	}
+	
+	private void sendHelp(CommandSender sender) {
+	sender.sendMessage(ChatColor.GOLD + "/bt tool");
+	sender.sendMessage(ChatColor.GRAY + "This gives you the tool which how you will be able to use BetterTools. Almost all BT commands will be to adjust this tool. Everything you do to this tool will be saved, can be duplicated by copying the item, and so on.");
+	sender.sendMessage(ChatColor.GOLD + "/bt settool");
+	sender.sendMessage(ChatColor.GRAY + "This sets the held tool to the material given.");
+	sender.sendMessage(ChatColor.GOLD + "/bt radius <radius>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set its radius.");
+	sender.sendMessage(ChatColor.GOLD + "/bt blocks <block list>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it uses. The block list should be all the material names, without spaces, and seperated by commas. Putting the same material in the list multiple times increases its likelyhood of being used for each block replaced.");
+	sender.sendMessage(ChatColor.GOLD + "/bt mask <block list>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it chooses to replace. The block list should be all the material names, without spaces, and seperated by commas.");
+	sender.sendMessage(ChatColor.GOLD + "/bt through <block list>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks it will ignore when choosing a landing. By default it is air, but if you are editing an ocean floor for example, you can add water to the list. The block list should be all the material names, without spaces, and seperated by commas.");
+	sender.sendMessage(ChatColor.GOLD + "/bt touching <block list>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will set the blocks chosen as the only places that the tool will work near. For example, setting it to be only grass blocks will make sure that the tool only changes blocks that are near grass blocks. This stacks with masks. Use '/bt touching any' to reset.");
+	sender.sendMessage(ChatColor.GOLD + "/bt blockupdates <true/false>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will enable or disable block updates done by it.");
+	sender.sendMessage(ChatColor.GOLD + "/bt refreshtool");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will update the lore and data on it. Helpful for updating pre-existing tools for a different version of BetterTools");
+	sender.sendMessage(ChatColor.GOLD + "/bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will make the tool follow a noise generation algorithm to choose blocks (after checking the tool masks). If the tool has a noise algorithm already assigned, use '/bt noise off', or set the method as none to remove it again. For more information, you can use /bt help <parameter name> to find out more about what the parameter does.");
+	sender.sendMessage(ChatColor.GOLD + "/bt undo [amount]");
+	sender.sendMessage(ChatColor.GRAY + "This will undo your previous action. Up to 200 times. Input a number to do more than one at a time.");
+	sender.sendMessage(ChatColor.GOLD + "/bt help <parameter/concept>");
+	sender.sendMessage(ChatColor.GRAY + "This command followed by almost any concept or parameter mentioned, will give a brief explaination of it.");
 	}
 	
 	private ArrayList<String> getLore(NBTItem item){
@@ -370,6 +452,27 @@ public class Commands implements CommandExecutor{
 		}
 		if(!loreConstructor.equals("    "))
 			lore.add(loreConstructor);
+
+		if(item.getString("Touching") != "") {
+			loreConstructor = ChatColor.GOLD + "Touching: " + ChatColor.WHITE;
+			loopTracker = 0;
+			for(int i = 0; i < item.getString("Touching").split(",").length; i++) {
+				loreConstructor = loreConstructor + item.getString("Touching").split(",")[i];
+				if(loopTracker == 2) {
+					loopTracker = 0;
+					lore.add(loreConstructor);
+					loreConstructor = ChatColor.WHITE + "    ";
+				}else {
+					if(i != item.getString("Touching").split(",").length-1)
+						loreConstructor = loreConstructor + ",";
+					loopTracker++;
+				}
+			}
+			if(!loreConstructor.equals("    "))
+				lore.add(loreConstructor);
+		}else {
+			lore.add(ChatColor.GOLD + "Touching: " + ChatColor.WHITE + "Any");
+		}
 		
 		lore.add(ChatColor.GOLD + "Block Updates: " + ChatColor.WHITE + item.getBoolean("Updates"));
 		

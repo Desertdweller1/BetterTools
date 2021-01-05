@@ -27,7 +27,7 @@ public class Alteration {
 	public int revert() {
 		int amount = 0;
 		for(Location location : blockList.keySet()) {
-			location.getWorld().getBlockAt(location).setType(blockList.get(location).getOriginalMat(), false);
+			location.getWorld().getBlockAt(location).setBlockData(blockList.get(location).getOriginalDat(), false);
 			amount++;
 		}
 		return amount;

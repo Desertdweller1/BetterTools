@@ -1,16 +1,16 @@
 package me.desertdweller.bettertools.undo;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 public class OriginalBlock {
-	private Material originalMat;
+	private BlockData originalDat;
 	
 	public OriginalBlock(Block block) {
-		originalMat = block.getType();
+		originalDat = block.getBlockData().clone();
 	}
 	
-	public Material getOriginalMat() {
-		return originalMat;
+	public BlockData getOriginalDat() {
+		return originalDat;
 	}
 }
