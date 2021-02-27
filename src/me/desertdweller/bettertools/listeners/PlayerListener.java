@@ -1,8 +1,9 @@
 package me.desertdweller.bettertools.listeners;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
@@ -13,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import de.tr7zw.nbtapi.NBTItem;
+import me.desertdweller.bettertools.BetterTools;
+import me.desertdweller.bettertools.math.BTBMeta;
 import me.desertdweller.bettertools.math.BlockMath;
 import me.desertdweller.bettertools.math.Noise;
 import me.desertdweller.bettertools.undo.Alteration;
@@ -20,7 +23,7 @@ import me.desertdweller.bettertools.undo.ChangeTracker;
 import net.md_5.bungee.api.ChatColor;
 
 public class PlayerListener implements Listener{
-
+	private static BetterTools plugin = BetterTools.getPlugin(BetterTools.class);
 
 	@EventHandler
 	public static void onPlayerInteract(PlayerInteractEvent e) {
@@ -50,13 +53,20 @@ public class PlayerListener implements Listener{
 	        if(tracker == null)
 	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
 	        Alteration change = new Alteration();
-			HashMap<BlockData, Boolean> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
+			Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
+			List<BlockData> blockList = new ArrayList<BlockData>();
+			for(BlockData block : matList.keySet()) {
+				for(int i = 0; i < matList.get(block).amount; i++)
+					blockList.add(block);
+			}
 			for(int i = 0; i < blocks.size(); i++) {
-				int id = (int) (Math.random()*matList.size());
-				BlockData targetData = (BlockData)  matList.keySet().toArray()[id];
+				int id = (int) (Math.random()*blockList.size());
+				BlockData targetData = (BlockData)  blockList.get(id);
 				if(!blocks.get(i).getBlockData().equals(targetData)) {
 					change.addBlock(blocks.get(i));
-					setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData));
+					plugin.getCoreProtect().logRemoval(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
+					setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData).specified);
+					plugin.getCoreProtect().logPlacement(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
 					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
 				}
 			}

@@ -26,7 +26,7 @@ public class ChangeTracker {
 	public int undo() {
 		Alteration targetArea = changes.get(changes.size()-1);
 		changes.remove(changes.size()-1);
-		return targetArea.revert();
+		return targetArea.revert(Bukkit.getPlayer(player));
 	}
 
 	public UUID getPlayer() {

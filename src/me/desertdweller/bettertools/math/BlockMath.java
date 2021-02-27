@@ -3,6 +3,7 @@ package me.desertdweller.bettertools.math;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -103,7 +104,7 @@ public class BlockMath {
         return blocks;
     }
     
-    public static List<Block> getNearbyBlocksMasked(Location location, int radius, HashMap<BlockData, Boolean> mask, Noise perlin) {
+    public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise perlin) {
         List<Block> blocks = new ArrayList<Block>();
         List<Material> nonCustomMats = getNonCustomMaterials(mask);
         for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
@@ -124,7 +125,7 @@ public class BlockMath {
         return blocks;
     }
     
-    public static List<Block> getBlocksTouching(List<Block> inputBlocks, HashMap<BlockData, Boolean> touchLimits){
+    public static List<Block> getBlocksTouching(List<Block> inputBlocks, Map<BlockData, BTBMeta> touchLimits){
         List<Material> nonCustomMats = getNonCustomMaterials(touchLimits);
     	List<Block> outputBlocks = new ArrayList<Block>();
     	for(Block block : inputBlocks) {
@@ -157,10 +158,10 @@ public class BlockMath {
     	return outputBlocks;
     }
     
-    private static List<Material> getNonCustomMaterials(HashMap<BlockData, Boolean> map){
+    private static List<Material> getNonCustomMaterials(Map<BlockData, BTBMeta> map){
     	ArrayList<Material> materials = new ArrayList<Material>();
     	for(BlockData block : map.keySet()) {
-    		if(!map.get(block))
+    		if(!map.get(block).specified)
     			materials.add(block.getMaterial());
     	}
     	return materials;
@@ -621,22 +622,20 @@ public class BlockMath {
     }
     
     //Returns the blockdata, as well as true if properties have been specifically set by the player.
-    public static HashMap<BlockData, Boolean> stringToHashMap(String string, boolean ratios){
+    public static Map<BlockData, BTBMeta> stringToHashMap(String string, boolean ratios){
     	String[] materialNames = string.split(",");
-    	HashMap<BlockData, Boolean> materialList = new HashMap<BlockData, Boolean>();
+    	HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
     	for(String materialString : materialNames) {
     		materialString = materialString.replace('|', ',');
     		if(materialString.split("%").length == 1) {
-        		materialList.put(Bukkit.createBlockData(materialString), materialString.contains("["));
+        		materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
     		}else if(materialString.split("%").length == 2){
-    			for(int i = 0; i < Integer.parseInt(materialString.split("%")[0]); i++) {
-    				materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), materialString.contains("["));
-    			}
+    			materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
     		}
     	}
     	return materialList;
     }
-    
+
     public static void initMaterialIds() {
     	int id = 0;
     	for(Material material : Material.values()) {
@@ -644,7 +643,7 @@ public class BlockMath {
     		id++;
     	}
     }
-    
+
     public static String checkStringList(String list) {
     	String[] materialNames = list.split(",");
     	for(String materialString : materialNames) {
