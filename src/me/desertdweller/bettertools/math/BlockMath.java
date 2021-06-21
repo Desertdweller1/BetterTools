@@ -89,6 +89,7 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
 import com.ags.simpleblocks.objects.SimpleBlock;
+import com.google.common.base.Enums;
 
 import de.tr7zw.nbtapi.NBTItem;
 import me.desertdweller.bettertools.BetterTools;
@@ -197,7 +198,11 @@ public class BlockMath {
     }
 
     public static BlockData applyProperties(BlockData target, BlockData properties) {
-    	CLAZZ z = CLAZZ.valueOf(target.getClass().getSimpleName());
+    	CLAZZ z;
+    	z = Enums.getIfPresent(CLAZZ.class, target.getClass().getSimpleName()).orNull();
+    	if(z == null) {
+    		return null;
+    	}
     	switch(z) {
     	case CraftStairs:
     		Stairs targetStairs = (Stairs) target;
@@ -282,6 +287,16 @@ public class BlockMath {
     		targetChest.setType(propertyChest.getType());
     		targetChest.setWaterlogged(propertyChest.isWaterlogged());
     		return targetChest;
+    	case CraftCobbleWall:
+    		Wall targetWall = (Wall) target;
+    		Wall propertyWall = (Wall) properties;
+    		targetWall.setUp(propertyWall.isUp());
+    		targetWall.setWaterlogged(propertyWall.isWaterlogged());
+    		targetWall.setHeight(BlockFace.EAST, propertyWall.getHeight(BlockFace.EAST));
+    		targetWall.setHeight(BlockFace.WEST, propertyWall.getHeight(BlockFace.WEST));
+    		targetWall.setHeight(BlockFace.SOUTH, propertyWall.getHeight(BlockFace.SOUTH));
+    		targetWall.setHeight(BlockFace.NORTH, propertyWall.getHeight(BlockFace.NORTH));
+    		return targetWall;
     	case CraftCocoa:
     		Cocoa targetCocoa = (Cocoa) target;
     		Cocoa propertyCocoa = (Cocoa) properties;
@@ -592,7 +607,7 @@ public class BlockMath {
     		TNT propertyTNT = (TNT) properties;
     		targetTNT.setUnstable(propertyTNT.isUnstable());
     		return targetTNT;
-    	case CraftTrapDoor:
+    	case CraftTrapdoor:
     		TrapDoor targetTrapDoor = (TrapDoor) target;
     		TrapDoor propertyTrapDoor = (TrapDoor) properties;
     		targetTrapDoor.setFacing(propertyTrapDoor.getFacing());
@@ -623,12 +638,6 @@ public class BlockMath {
     		targetTurtleEgg.setEggs(propertyTurtleEgg.getEggs());
     		targetTurtleEgg.setHatch(propertyTurtleEgg.getHatch());
     		return targetTurtleEgg;
-    	case CraftWall:
-    		Wall targetWall = (Wall) target;
-    		Wall propertyWall = (Wall) properties;
-    		targetWall.setUp(propertyWall.isUp());
-    		targetWall.setWaterlogged(propertyWall.isWaterlogged());
-    		return targetWall;
     	case CraftWallSign:
     		WallSign targetWallSign = (WallSign) target;
     		WallSign propertyWallSign = (WallSign) properties;
@@ -700,7 +709,7 @@ public class BlockMath {
             		Bukkit.createBlockData(materialString);
         		}catch(IllegalArgumentException e) {
         			//Is it not a simpleblock?
-        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
+        			if(BetterTools.getSimpleBlocks() == null || BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
             			return materialString;
         		}
     		}else if(materialString.split("%").length == 2){
@@ -708,7 +717,7 @@ public class BlockMath {
             		Bukkit.createBlockData(materialString.split("%")[1]);
         		}catch(IllegalArgumentException e) {
         			//Is it not a simpleblock?
-        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
+        			if(BetterTools.getSimpleBlocks() != null || BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
             			return materialString;
         		}
     		}
@@ -718,6 +727,6 @@ public class BlockMath {
 }
 
 enum CLAZZ {
-	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFire, CraftFurnaceFurace, CraftGate, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNoteBlock, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapDoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWall, CraftWallSign, CraftWaterlogged, CraftCrops
+	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFire, CraftFurnaceFurace, CraftGate, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNoteBlock, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
 
 }

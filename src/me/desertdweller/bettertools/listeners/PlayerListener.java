@@ -70,7 +70,9 @@ public class PlayerListener implements Listener{
 				if(!blocks.get(i).getBlockData().equals(targetData)) {
 					change.addBlock(blocks.get(i));
 					plugin.getCoreProtect().logRemoval(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
-					setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData).specified);
+					if(!setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData).specified)) {
+						e.getPlayer().sendMessage(ChatColor.RED + "The block type" + blocks.get(i).getBlockData().getClass().getSimpleName() + " was not able to correctly transfer data. This is an error. Please report it with this message and it will be fixed ASAP.");
+					}
 					plugin.getCoreProtect().logPlacement(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
 					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
 				}
@@ -144,11 +146,16 @@ public class PlayerListener implements Listener{
 		}
 	}
 	
-	private static void setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
+	private static boolean setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
+		//If the blocks are of the same type, (ie both walls), then transfer data from the previous block to the other.
 		if(!customProps && targetBlock.getBlockData().getClass().equals(targetData.getClass())) {
 			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
 		}
+		//This would be null if there was an error in trying to transfer data from one block to another.
+		if(targetData == null)
+			return false;
 		targetBlock.setBlockData(targetData, updates);
+		return true;
 	}
 	
 	private static Set<Material> dataToMaterialSet(Set<BlockData> list){

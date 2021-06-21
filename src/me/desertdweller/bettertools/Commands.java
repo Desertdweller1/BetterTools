@@ -192,7 +192,7 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
-			if(p.getInventory().getItemInMainHand() == null)
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR))
 				return false;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
