@@ -1,17 +1,21 @@
-More noise algorithms -possibility?-
+Test
 
-redos
+Check for bugs with comparing walls to walls, and trapdoors to trapdoors.
 
-YT tutorial
+not holding tool with /bt blocks causes error
+ability to disable touchin (already a thing?)
+
+
+Add
+
+YT tutorial (advanced)
 Look into packing item nbt with jar file
 
-configurable max size (already a thing?)
-Map of what the algorithm looks like held in your off-hand when it's empty.
-
+redos
+Biome Brush
 Foliage Brush
-Ability to toggle placement of blocks through players
 
-Interacting with blocks adds and removes them from the brush
+
 
 Performance:
 

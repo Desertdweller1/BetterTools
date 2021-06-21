@@ -83,6 +83,16 @@ import org.bukkit.block.data.type.TripwireHook;
 import org.bukkit.block.data.type.TurtleEgg;
 import org.bukkit.block.data.type.Wall;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
+
+import com.ags.simpleblocks.objects.SimpleBlock;
+
+import de.tr7zw.nbtapi.NBTItem;
+import me.desertdweller.bettertools.BetterTools;
+import me.desertdweller.bettertools.Renderer;
 
 public class BlockMath {
 	public static HashMap<Material, Integer> materialIds = new HashMap<Material, Integer>();
@@ -104,7 +114,7 @@ public class BlockMath {
         return blocks;
     }
     
-    public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise perlin) {
+    public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise noise) {
         List<Block> blocks = new ArrayList<Block>();
         List<Material> nonCustomMats = getNonCustomMaterials(mask);
         for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
@@ -113,9 +123,9 @@ public class BlockMath {
                 	double distance = ((location.getBlockX()-x) * (location.getBlockX()-x) + ((location.getBlockZ()-z) * (location.getBlockZ()-z)) + ((location.getBlockY()-y) * (location.getBlockY()-y)));
                 	if(distance < radius * radius) {
                 		if(nonCustomMats.contains(location.getWorld().getBlockAt(x,y,z).getType())) {
-                			if(perlin.getPoint(x, y, z))
+                			if(noise.getPoint(x, y, z))
                 				blocks.add(location.getWorld().getBlockAt(x, y, z));
-                		}else if(mask.containsKey(location.getWorld().getBlockAt(x,y,z).getBlockData()) && perlin.getPoint(x, y, z)) {
+                		}else if(mask.containsKey(location.getWorld().getBlockAt(x,y,z).getBlockData()) && noise.getPoint(x, y, z)) {
                     		blocks.add(location.getWorld().getBlockAt(x, y, z));
                 		}
                 	}
@@ -165,6 +175,25 @@ public class BlockMath {
     			materials.add(block.getMaterial());
     	}
     	return materials;
+    }
+    
+    public static void givePlayerNoiseMap(Player p) {
+    	if(!p.getInventory().getItemInOffHand().getType().equals(Material.AIR))
+    		return;
+    	ItemStack map = new ItemStack(Material.FILLED_MAP);
+    	MapMeta meta = (MapMeta) map.getItemMeta();
+    	
+    	MapView mapView = Bukkit.createMap(p.getWorld());
+		mapView.setUnlimitedTracking(false);
+		mapView.getRenderers().clear();
+		mapView.addRenderer(new Renderer());
+    	
+    	meta.setMapView(mapView);
+    	map.setItemMeta(meta);
+    	NBTItem nbti = new NBTItem(map);
+    	nbti.setString("Plugin", "BetterTools");
+    	
+    	p.getInventory().setItemInOffHand(nbti.getItem());
     }
 
     public static BlockData applyProperties(BlockData target, BlockData properties) {
@@ -626,12 +655,26 @@ public class BlockMath {
     	String[] materialNames = string.split(",");
     	HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
     	for(String materialString : materialNames) {
-    		materialString = materialString.replace('|', ',');
-    		if(materialString.split("%").length == 1) {
-        		materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
-    		}else if(materialString.split("%").length == 2){
-    			materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
-    		}
+    			materialString = materialString.replace('|', ',');
+    			//If no specified additional amounts.
+        		if(materialString.split("%").length == 1) {
+        			//Is this, or is this not, a simple block
+        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) != null) {
+        				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase());
+        				
+                		materialList.put(Bukkit.createBlockData("noteblock[instrument=" + sb.getInstrument() + ",note=" + sb.getNote() + "]"), new BTBMeta(false, 1));
+        			}else {
+                		materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
+        			}
+        			//If there is a specified amount.
+        		}else if(materialString.split("%").length == 2){
+        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase()) != null) {
+        				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase());
+        				materialList.put(Bukkit.createBlockData("noteblock[instrument=" + sb.getInstrument() + ",note=" + sb.getNote() + "]"), new BTBMeta(false, Integer.parseInt(materialString.split("%")[0])));
+        			}else {
+        				materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
+        			}
+        		}
     	}
     	return materialList;
     }
@@ -645,20 +688,28 @@ public class BlockMath {
     }
 
     public static String checkStringList(String list) {
+    	//2%oak_stairs,spruce_stairs[facing=north|type=top],small_stone_bricks
     	String[] materialNames = list.split(",");
+    	//2%oak_stairs spruce_stairs[facing=north|type=top] small_stone_bricks
     	for(String materialString : materialNames) {
     		materialString = materialString.replace('|', ',');
+    		//2%oak_stairs  spruce_stairs[facing=north type=top]  small_stone_bricks
     		if(materialString.split("%").length == 1) {
+        		//2 oak_stairs  spruce_stairs[facing=north type=top]  small_stone_bricks
     			try {
             		Bukkit.createBlockData(materialString);
         		}catch(IllegalArgumentException e) {
-        			return materialString;
+        			//Is it not a simpleblock?
+        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
+            			return materialString;
         		}
     		}else if(materialString.split("%").length == 2){
     			try {
             		Bukkit.createBlockData(materialString.split("%")[1]);
         		}catch(IllegalArgumentException e) {
-        			return materialString;
+        			//Is it not a simpleblock?
+        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
+            			return materialString;
         		}
     		}
     	}

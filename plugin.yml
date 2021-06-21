@@ -1,9 +1,10 @@
 name: BetterTools
 main: me.desertdweller.bettertools.BetterTools
-version: 0.1.6
+version: 0.1.7
 author: Desertdweller
 api-version: 1.13
-softdepend: [CoreProtect]
+depend: [NBTAPI]
+softdepend: [CoreProtect,SimpleBlocks]
 commands:
   bt:
     description: General BetterTools command.
@@ -41,8 +42,9 @@ commands:
   bt undo:
     description: Undoes the previous action.
     usage: /bt undo
-  bt redo:
-    description: Redoes whatever was undone.
+  bt noise:
+    description: Sets the noise parameters for the tool you are holding.
+    usage: /bt 
   bt refreshtool:
     description: Refreshes the lore for the tool you are holding.
     usage: /bt refreshtool

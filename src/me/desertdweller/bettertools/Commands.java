@@ -17,6 +17,7 @@ import me.desertdweller.bettertools.undo.ChangeTracker;
 import net.md_5.bungee.api.ChatColor;
 
 public class Commands implements CommandExecutor{
+	private static BetterTools plugin = BetterTools.getPlugin(BetterTools.class);
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -61,9 +62,6 @@ public class Commands implements CommandExecutor{
 			NBTItem nbti = new NBTItem(new ItemStack(Material.GOLDEN_HOE));
 			nbti.setString("Plugin", "BetterTools");
 			nbti.setString("Item", "Paint Tool");
-			if(args.length > 1) {
-				nbti.setInteger("Radies", Integer.parseInt(args[1]));
-			}
 			nbti.setInteger("Radius", 5);
 			nbti.setString("Blocks", "stone,air");
 			nbti.setString("Mask", "air");
@@ -80,9 +78,14 @@ public class Commands implements CommandExecutor{
 			noise.frequency = 1;
 			
 			nbti.setString("Noise", noise.toString());
-			if(args.length > 1)
-				nbti.setInteger("Radius", Integer.parseInt(args[1]));
-			
+			if(args.length > 1) {
+				int radius = Integer.parseInt(args[1]);
+				if(radius > plugin.getConfig().getInt("maxRadius"))
+					radius = plugin.getConfig().getInt("maxRadius");
+				
+				nbti.setInteger("Radius", radius);
+				
+			}
 			ItemStack item = nbti.getItem();
 			ItemMeta meta = item.getItemMeta();
 			meta.setLore(getLore(nbti));
@@ -119,7 +122,11 @@ public class Commands implements CommandExecutor{
 			Player p = (Player) sender;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
-				nbti.setInteger("Radius", Integer.parseInt(args[1]));
+				int radius = Integer.parseInt(args[1]);
+				if(radius > plugin.getConfig().getInt("maxRadius"))
+					radius = plugin.getConfig().getInt("maxRadius");
+				
+				nbti.setInteger("Radius", radius);
 			}else {
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
 			}
@@ -185,6 +192,8 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand() == null)
+				return false;
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
@@ -297,13 +306,14 @@ public class Commands implements CommandExecutor{
 						meta.setLore(getLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
-					}else if(invalidName.equalsIgnoreCase("any") || invalidName.equalsIgnoreCase("empty")){
+					}else if(invalidName.equalsIgnoreCase("any") || invalidName.equalsIgnoreCase("empty") || invalidName.equalsIgnoreCase("off")){
 						nbti.setString("Touching", "");
 						ItemStack item = nbti.getItem();
 						ItemMeta meta = item.getItemMeta();
 						meta.setLore(getLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
+						p.sendMessage("Touching list cleared");
 					}else {
 						p.sendMessage(ChatColor.RED + "'" + invalidName + "' is not a valid material!");
 					}
@@ -325,7 +335,7 @@ public class Commands implements CommandExecutor{
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length == 2 && args[2].equals("off")) {
 					Noise noise = new Noise(nbti.getString("Noise"));
-					noise.method = "off";
+					noise.method = "none";
 					nbti.setString("Noise", noise.toString());
 				}else if(args.length < 9) {
 					p.sendMessage(ChatColor.WHITE + "/bt noise <scale> <Xscew> <Yscew> <Zscew> <min> <max> <frequency> <none/turb/perlin>");

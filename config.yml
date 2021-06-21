@@ -1,2 +1,3 @@
 maxUndos: 200
 joinMessages: true
+maxRadius: 25
