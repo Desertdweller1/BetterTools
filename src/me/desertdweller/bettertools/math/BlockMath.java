@@ -660,7 +660,8 @@ public class BlockMath {
     }
     
     //Returns the blockdata, as well as true if properties have been specifically set by the player.
-    public static Map<BlockData, BTBMeta> stringToHashMap(String string, boolean ratios){
+    @SuppressWarnings("deprecation")
+	public static Map<BlockData, BTBMeta> stringToHashMap(String string, boolean ratios){
     	String[] materialNames = string.split(",");
     	HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
     	for(String materialString : materialNames) {
@@ -671,7 +672,7 @@ public class BlockMath {
         			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) != null) {
         				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase());
         				
-                		materialList.put(Bukkit.createBlockData("noteblock[instrument=" + sb.getInstrument() + ",note=" + sb.getNote() + "]"), new BTBMeta(false, 1));
+                		materialList.put(Bukkit.createBlockData("note_block[instrument=" + sb.getInstrument().toString().toLowerCase().replace("piano", "harp") + ",note=" + sb.getNote().getId() + "]"), new BTBMeta(false, 1));
         			}else {
                 		materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
         			}
@@ -679,7 +680,8 @@ public class BlockMath {
         		}else if(materialString.split("%").length == 2){
         			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase()) != null) {
         				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase());
-        				materialList.put(Bukkit.createBlockData("noteblock[instrument=" + sb.getInstrument() + ",note=" + sb.getNote() + "]"), new BTBMeta(false, Integer.parseInt(materialString.split("%")[0])));
+        				String sbInstrumentStr = sb.getInstrument().toString().toLowerCase().replace("piano", "harp").replace("base_drum", "basedrum").replace("bass_guitar", "bass").replace("snare_drum", "snare").replace("sticks", "hat");
+        				materialList.put(Bukkit.createBlockData("note_block[instrument=" + sbInstrumentStr + ",note=" + sb.getNote().getId() + "]"), new BTBMeta(false, Integer.parseInt(materialString.split("%")[0])));
         			}else {
         				materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
         			}
@@ -694,6 +696,15 @@ public class BlockMath {
     		materialIds.put(material, id);
     		id++;
     	}
+    }
+    
+    public static List<String> matArrayToStringList(Material[] materials){
+    	List<String> strings = new ArrayList<String>();
+    	
+    	for(Material mat : materials) {
+    		strings.add(mat.toString().toLowerCase());
+    	}
+    	return strings;
     }
 
     public static String checkStringList(String list) {

@@ -21,9 +21,6 @@ commands:
   bt radius:
     description: Sets the radius of the held tool.
     usage: /bt radus <radius>
-  bt params:
-    description: Adjust the parameters of the paint tool. Add in further parameters to enable perlin noise usage.
-    usage: /bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>
   bt mask:
     description: Adds a list of blocks as a mask to the tool. Use official material names, and separate them with commas, no spaces.
     usage: /bt mask <block list>
@@ -31,7 +28,7 @@ commands:
     description: Sets the tool's blocks.
     usage: /bt blocks <block list>
   bt blockupdates:
-    description: Sets the brush to whether or not it will update blocks.
+    description: Sets the tool to whether or not it will update blocks.
     usage: /bt updateblocks <true/false>
   bt through:
     description: Sets the blocks the tool will go through when selecting the origin.
@@ -44,13 +41,10 @@ commands:
     usage: /bt undo
   bt noise:
     description: Sets the noise parameters for the tool you are holding.
-    usage: /bt 
+    usage: /bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>
   bt refreshtool:
     description: Refreshes the lore for the tool you are holding.
     usage: /bt refreshtool
-  bt blockupdates:
-    description: Sets the tool to whether or not it updates blocks around it.
-    usage: /bt blockupdates <true/false>
 permissions:
    bt.use:
       description: Allows the player to use the tools.

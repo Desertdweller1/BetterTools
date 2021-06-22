@@ -71,7 +71,7 @@ public class PlayerListener implements Listener{
 					change.addBlock(blocks.get(i));
 					plugin.getCoreProtect().logRemoval(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
 					if(!setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData).specified)) {
-						e.getPlayer().sendMessage(ChatColor.RED + "The block type" + blocks.get(i).getBlockData().getClass().getSimpleName() + " was not able to correctly transfer data. This is an error. Please report it with this message and it will be fixed ASAP.");
+						e.getPlayer().sendMessage(ChatColor.RED + "The block type " + blocks.get(i).getBlockData().getClass().getSimpleName() + " was not able to correctly transfer data. This is an error. Please report it with this message and it will be fixed ASAP.");
 					}
 					plugin.getCoreProtect().logPlacement(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
 					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);

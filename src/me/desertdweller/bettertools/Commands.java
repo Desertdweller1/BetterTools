@@ -98,6 +98,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			ItemStack item = p.getInventory().getItemInMainHand();
 			NBTItem nbti = new NBTItem(item);
 			if(!nbti.hasKey("Item") || !nbti.getString("Item").equals("Paint Tool")) {
@@ -120,6 +124,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				int radius = Integer.parseInt(args[1]);
@@ -142,6 +150,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
@@ -175,6 +187,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				ItemStack item = nbti.getItem();
@@ -192,8 +208,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
-			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR))
-				return false;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
@@ -222,6 +240,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length == 2 && (args[1].toLowerCase().equals("true") || args[1].toLowerCase().equals("false"))) {
@@ -267,6 +289,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
@@ -295,6 +321,10 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
@@ -331,9 +361,13 @@ public class Commands implements CommandExecutor{
 				return true;
 			}
 			Player p = (Player) sender;
+			if(p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+				return true;
+			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
-				if(args.length == 2 && args[2].equals("off")) {
+				if(args.length == 2 && args[1].equals("off")) {
 					Noise noise = new Noise(nbti.getString("Noise"));
 					noise.method = "none";
 					nbti.setString("Noise", noise.toString());

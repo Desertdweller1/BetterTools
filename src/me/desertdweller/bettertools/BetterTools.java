@@ -19,6 +19,7 @@ public class BetterTools extends JavaPlugin{
 	@Override
 	public void onEnable() {
 		getCommand("bt").setExecutor(new Commands());
+		getCommand("bt").setTabCompleter(new CommandCompleter());
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		noiseGen = new PerlinNoiseGenerator();
