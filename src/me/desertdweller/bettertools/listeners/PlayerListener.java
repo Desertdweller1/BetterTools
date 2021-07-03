@@ -137,6 +137,7 @@ public class PlayerListener implements Listener{
 		}
 	}
 	
+	@EventHandler
 	public static void onPlayerSwapHandsEvent(PlayerSwapHandItemsEvent e) {
 		if(e.getOffHandItem().getType().equals(Material.AIR))
 			return;
