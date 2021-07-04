@@ -6,7 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ags.simpleblocks.SimpleBlocks;
 
-import me.desertdweller.bettertools.listeners.PickBlockDetectorRunnable;
 import me.desertdweller.bettertools.listeners.PlayerJoinListener;
 import me.desertdweller.bettertools.listeners.PlayerListener;
 import me.desertdweller.bettertools.math.BlockMath;
