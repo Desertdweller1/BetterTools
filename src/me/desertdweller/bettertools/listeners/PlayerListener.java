@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -144,6 +146,13 @@ public class PlayerListener implements Listener{
 		NBTItem nbti = new NBTItem(e.getOffHandItem());
 		if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && e.getOffHandItem().getType().equals(Material.FILLED_MAP)) {
 			e.setOffHandItem(new ItemStack(Material.AIR));
+		}
+	}
+	
+	@EventHandler
+	public static void onFarmlandTrampleEvent(PlayerInteractEvent e) {
+		if(e.getAction().equals(Action.PHYSICAL) && e.hasBlock() && e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+			e.setCancelled(true);
 		}
 	}
 	
