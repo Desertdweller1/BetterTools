@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.*;
 import org.bukkit.block.data.type.*;
+import org.bukkit.craftbukkit.v1_16_R3.block.impl.CraftRotatable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
@@ -469,9 +470,9 @@ public class BlockMath {
     		targetRespawnAnchor.setCharges(propertyRespawnAnchor.getCharges());
     		return targetRespawnAnchor;
     	case CraftRotatable:
-    		Rotatable targetRotatable = (Rotatable) target;
-    		Rotatable propertyRotatable = (Rotatable) properties;
-    		targetRotatable.setRotation(propertyRotatable.getRotation());
+    		CraftRotatable targetRotatable = (CraftRotatable) target;
+    		CraftRotatable propertyRotatable = (CraftRotatable) properties;
+    		targetRotatable.setAxis(propertyRotatable.getAxis());
     		return targetRotatable;
     	case CraftSapling:
     		Sapling targetSapling = (Sapling) target;
