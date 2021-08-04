@@ -11,8 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import com.ags.simpleblocks.objects.SimpleBlock;
-
 import me.desertdweller.bettertools.math.BlockMath;
 
 public class CommandCompleter implements TabCompleter{
@@ -127,11 +125,6 @@ public class CommandCompleter implements TabCompleter{
 			if(mat.isBlock())
 				possibleBlocks.add((beforeBlocks.concat(mat.toString().toLowerCase())).replaceAll("minecraft:", ""));
 		}
-		if(BetterTools.getSimpleBlocks() != null) {
-			for(SimpleBlock sb : BetterTools.getSimpleBlocks().getAllSimpleBlocks()) {
-				possibleBlocks.add(beforeBlocks.concat(sb.getId()));
-			}
-		}
 		possibleBlocks = prunePossibilities(possibleBlocks, argument);
 		//If there are no nonpruned possibilities, check that the last item is an actual item, and add a comma if so.
 		if(possibleBlocks.size() == 0 && Material.getMaterial(argument.split(",")[argument.split(",").length - 1].toUpperCase()) != null) {
@@ -141,11 +134,6 @@ public class CommandCompleter implements TabCompleter{
 				for(Material mat : Material.values()) {
 					if(mat.isBlock())
 						possibleBlocks.add((argument.concat(mat.toString().toLowerCase())).replaceAll("minecraft:", ""));
-				}
-				if(BetterTools.getSimpleBlocks() != null) {
-					for(SimpleBlock sb : BetterTools.getSimpleBlocks().getAllSimpleBlocks()) {
-						possibleBlocks.add(beforeBlocks.concat(sb.getId()));
-					}
 				}
 			}
 		//If there is a bracket, then the user is likely trying to add special data, just resuggest what they have input so they know it is proper.

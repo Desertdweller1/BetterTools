@@ -1,10 +1,7 @@
 package me.desertdweller.bettertools;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.ags.simpleblocks.SimpleBlocks;
 
 import me.desertdweller.bettertools.listeners.PlayerJoinListener;
 import me.desertdweller.bettertools.listeners.PlayerListener;
@@ -48,13 +45,4 @@ public class BetterTools extends JavaPlugin{
 
         return CoreProtect;
 	}
-	
-	public static SimpleBlocks getSimpleBlocks() {
-        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("SimpleBlocks");
- 
-        if (plugin instanceof SimpleBlocks) {
-            return (SimpleBlocks) plugin;
-        }
-        return null;
-    }
 }

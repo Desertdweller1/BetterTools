@@ -18,11 +18,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
-import com.ags.simpleblocks.objects.SimpleBlock;
 import com.google.common.base.Enums;
 
 import de.tr7zw.nbtapi.NBTItem;
-import me.desertdweller.bettertools.BetterTools;
 import me.desertdweller.bettertools.Renderer;
 
 public class BlockMath {
@@ -590,7 +588,6 @@ public class BlockMath {
     }
     
     //Returns the blockdata, as well as true if properties have been specifically set by the player.
-    @SuppressWarnings("deprecation")
 	public static Map<BlockData, BTBMeta> stringToHashMap(String string, boolean ratios){
     	String[] materialNames = string.split(",");
     	HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
@@ -598,23 +595,10 @@ public class BlockMath {
     			materialString = materialString.replace('|', ',');
     			//If no specified additional amounts.
         		if(materialString.split("%").length == 1) {
-        			//Is this, or is this not, a simple block
-        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) != null) {
-        				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase());
-        				
-                		materialList.put(Bukkit.createBlockData("note_block[instrument=" + sb.getInstrument().toString().toLowerCase().replace("piano", "harp") + ",note=" + sb.getNote().getId() + "]"), new BTBMeta(false, 1));
-        			}else {
-                		materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
-        			}
-        			//If there is a specified amount.
+                	materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
         		}else if(materialString.split("%").length == 2){
-        			if(BetterTools.getSimpleBlocks() != null && BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase()) != null) {
-        				SimpleBlock sb = BetterTools.getSimpleBlocks().getSimpleBlock(materialString.split("%")[1].toLowerCase());
-        				String sbInstrumentStr = sb.getInstrument().toString().toLowerCase().replace("piano", "harp").replace("base_drum", "basedrum").replace("bass_guitar", "bass").replace("snare_drum", "snare").replace("sticks", "hat");
-        				materialList.put(Bukkit.createBlockData("note_block[instrument=" + sbInstrumentStr + ",note=" + sb.getNote().getId() + "]"), new BTBMeta(false, Integer.parseInt(materialString.split("%")[0])));
-        			}else {
-        				materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
-        			}
+        			materialList.put(Bukkit.createBlockData(materialString.split("%")[1]), new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
+        			
         		}
     	}
     	return materialList;
@@ -649,17 +633,13 @@ public class BlockMath {
     			try {
             		Bukkit.createBlockData(materialString);
         		}catch(IllegalArgumentException e) {
-        			//Is it not a simpleblock?
-        			if(BetterTools.getSimpleBlocks() == null || BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
-            			return materialString;
+            		return materialString;
         		}
     		}else if(materialString.split("%").length == 2){
     			try {
             		Bukkit.createBlockData(materialString.split("%")[1]);
         		}catch(IllegalArgumentException e) {
-        			//Is it not a simpleblock?
-        			if(BetterTools.getSimpleBlocks() != null || BetterTools.getSimpleBlocks().getSimpleBlock(materialString.toLowerCase()) == null)
-            			return materialString;
+            		return materialString;
         		}
     		}
     	}
