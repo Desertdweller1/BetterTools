@@ -591,6 +591,7 @@ public class BlockMath {
     
     //Returns the blockdata, as well as true if properties have been specifically set by the player.
 	public static Map<BlockData, BTBMeta> stringToHashMap(String string, boolean ratios){
+    	string = setDefaultBlockData(string);
     	String[] materialNames = string.split(",");
     	HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
     	for(String materialString : materialNames) {
@@ -604,6 +605,27 @@ public class BlockMath {
         		}
     	}
     	return materialList;
+    }
+    
+    private static String setDefaultBlockData(String inputString) {
+    	String outputString = "";
+    	
+    	for(String blockString : inputString.split(",")) {
+    		if(blockString.split("%").length == 1) {
+	    		if(blockString.equals("oak_leaves") || blockString.equals("dark_oak_leaves") || blockString.equals("spruce_leaves") || blockString.equals("jungle_leaves") || blockString.equals("birch_leaves") || blockString.equals("acacia_leaves"))
+	    			blockString = blockString + "[persistent=true]";
+    		}else {
+    			String blockdata = blockString.split("%")[1];
+    			if(blockdata.equals("oak_leaves") || blockdata.equals("dark_oak_leaves") || blockdata.equals("spruce_leaves") || blockdata.equals("jungle_leaves") || blockdata.equals("birch_leaves") || blockdata.equals("acacia_leaves"))
+    				blockString = blockString + "[persistent=true]";
+    		}
+    		if(outputString.equals("")) {
+    			outputString = blockString;
+    		}else {
+    			outputString = outputString + "," + blockString;
+    		}
+    	}
+    	return outputString;
     }
 
     public static void initMaterialIds() {
