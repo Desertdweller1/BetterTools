@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.*;
 import org.bukkit.block.data.type.*;
-import org.bukkit.craftbukkit.v1_16_R3.block.impl.CraftRotatable;
+import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftRotatable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
@@ -312,6 +312,8 @@ public class BlockMath {
     		for(BlockFace face : propertyFire.getFaces())
     			targetFire.setFace(face, true);
     		return targetFire;
+    	case CraftFluid:
+    		return properties;
     	case CraftFurnaceFurace:
     		Furnace targetFurnace = (Furnace) target;
     		Furnace propertyFurnace = (Furnace) properties;
@@ -648,6 +650,6 @@ public class BlockMath {
 }
 
 enum CLAZZ {
-	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFire, CraftFurnaceFurace, CraftGate, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
+	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFire, CraftFluid, CraftFurnaceFurace, CraftGate, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
 
 }

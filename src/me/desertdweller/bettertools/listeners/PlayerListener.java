@@ -175,12 +175,4 @@ public class PlayerListener implements Listener{
 		}
 		return output;
 	}
-	
-//	private static void setBlockInNativeWorld(Block block, int blockId, boolean applyPhysics) {
-//	    net.minecraft.server.v1_13_R2.World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
-//	    BlockPosition bp = new BlockPosition(block.getX(), block.getY(), block.getZ());
-//	    @SuppressWarnings("deprecation")
-//		IBlockData ibd = net.minecraft.server.v1_13_R2.Block.getByCombinedId(blockId + (block.getData() << 12));
-//	    nmsWorld.setTypeAndData(bp, ibd, applyPhysics ? 3 : 2);
-//	}
 }
