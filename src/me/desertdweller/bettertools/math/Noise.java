@@ -15,14 +15,18 @@ public class Noise {
 	
 	public Noise(String input) {
 		String[] inputs = input.split(",");
-		scale = Float.parseFloat(inputs[0]);
-		xScew = Float.parseFloat(inputs[1]);
-		yScew = Float.parseFloat(inputs[2]);
-		zScew = Float.parseFloat(inputs[3]);
-		min = Float.parseFloat(inputs[4]);
-		max = Float.parseFloat(inputs[5]);
-		frequency = Float.parseFloat(inputs[6]);
-		method = inputs[7];
+		try {
+			scale = Float.parseFloat(inputs[0]);
+			xScew = Float.parseFloat(inputs[1]);
+			yScew = Float.parseFloat(inputs[2]);
+			zScew = Float.parseFloat(inputs[3]);
+			min = Float.parseFloat(inputs[4]);
+			max = Float.parseFloat(inputs[5]);
+			frequency = Float.parseFloat(inputs[6]);
+			method = inputs[7];
+		}catch(NumberFormatException nfe) {
+	        return;
+	    }
 	}
 	
 	public Noise() {

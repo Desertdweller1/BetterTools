@@ -130,7 +130,13 @@ public class Commands implements CommandExecutor{
 			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
-				int radius = Integer.parseInt(args[1]);
+				int radius = 5;
+				try {
+					radius = Integer.parseInt(args[1]);
+				}catch (NumberFormatException nfe) {
+			        sender.sendMessage(ChatColor.RED + "Please use a number.");
+			        return true;
+			    }
 				if(radius > plugin.getConfig().getInt("maxRadius"))
 					radius = plugin.getConfig().getInt("maxRadius");
 				
@@ -270,7 +276,12 @@ public class Commands implements CommandExecutor{
 			int timesToUndo = 1;
 			int totalBlocksUndone = 0;
 			if(args.length == 2) {
-				timesToUndo = Integer.parseInt(args[1]);
+				try{
+					timesToUndo = Integer.parseInt(args[1]);
+				}catch (NumberFormatException nfe) {
+			        sender.sendMessage(ChatColor.RED + "Please use a number.");
+			        return true;
+			    }
 			}
 			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(p.getUniqueId());
 			for(int i = 0; i < timesToUndo; i++) {
@@ -377,19 +388,55 @@ public class Commands implements CommandExecutor{
 				}else if(args.length > 8){
 					Noise noise = new Noise(nbti.getString("Noise"));
 					if(!args[1].equals("~"))
-						noise.scale = Float.parseFloat(args[1]);
+						try {
+							noise.scale = Float.parseFloat(args[1]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for scale.");
+					        return true;
+					    }
 					if(!args[2].equals("~"))
-						noise.xScew = Float.parseFloat(args[2]);
+						try {
+							noise.xScew = Float.parseFloat(args[2]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for xScew.");
+					        return true;
+					    }
 					if(!args[3].equals("~"))
-						noise.yScew = Float.parseFloat(args[3]);
+						try {
+							noise.yScew = Float.parseFloat(args[3]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for yScew.");
+					        return true;
+					    }
 					if(!args[4].equals("~"))
-						noise.zScew = Float.parseFloat(args[4]);
+						try {
+							noise.zScew = Float.parseFloat(args[4]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for zScew.");
+					        return true;
+					    }
 					if(!args[5].equals("~"))
-						noise.min = Float.parseFloat(args[5]);
+						try {
+							noise.min = Float.parseFloat(args[5]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for min.");
+					        return true;
+					    }
 					if(!args[6].equals("~"))
-						noise.max = Float.parseFloat(args[6]);
+						try {
+							noise.max = Float.parseFloat(args[6]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for max.");
+					        return true;
+					    }
 					if(!args[7].equals("~"))
-						noise.frequency = Float.parseFloat(args[7]);
+						try {
+							noise.frequency = Float.parseFloat(args[7]);
+						}catch (NumberFormatException nfe) {
+					        sender.sendMessage(ChatColor.RED + "Please use a decimal number for frequency.");
+					        return true;
+					    }
+							
 					if(!args[8].equals("none") && !args[8].equals("turb") && !args[8].equals("perlin")) {
 						sender.sendMessage(ChatColor.RED + args[8] + " is not a valid choice: 'none', 'turb', 'perlin'.");
 						return true;

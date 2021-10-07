@@ -128,11 +128,10 @@ public class PlayerListener implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public static void onInventoryClickEvent(InventoryClickEvent e) {
-		if(e.getCurrentItem().getType() == Material.AIR)
+		if(e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.AIR)
 			return;
 		NBTItem nbti = new NBTItem(e.getCurrentItem());
 		if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && e.getCurrentItem().getType() == Material.FILLED_MAP) {
-			System.out.println(e.getSlot());
 			e.setCancelled(true);
 			e.getClickedInventory().setItem(e.getSlot(), new ItemStack(Material.AIR));
 			e.setCursor(new ItemStack(Material.AIR));
