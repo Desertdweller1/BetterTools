@@ -10,6 +10,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -55,34 +56,55 @@ public class PlayerListener implements Listener{
 			if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
 				blocks = BlockMath.getBlocksTouching(blocks, BlockMath.stringToHashMap(nbti.getString("Touching"), false));
 			}
-			//System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to find appropriate blocks to change.");
-	        ChangeTracker tracker = ChangeTracker.getChangesForPlayer(e.getPlayer().getUniqueId());
-	        if(tracker == null)
-	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
-	        Alteration change = new Alteration();
+
 			Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
-			List<BlockData> blockList = new ArrayList<BlockData>();
-			for(BlockData block : matList.keySet()) {
-				for(int i = 0; i < matList.get(block).amount; i++)
-					blockList.add(block);
-			}
-			for(int i = 0; i < blocks.size(); i++) {
-				int id = (int) (Math.random()*blockList.size());
-				BlockData targetData = (BlockData)  blockList.get(id);
-				if(!blocks.get(i).getBlockData().equals(targetData)) {
-					change.addBlock(blocks.get(i));
-					plugin.getCoreProtect().logRemoval(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
-					if(!setBlockData(blocks.get(i), targetData.clone(), nbti.getBoolean("Updates"), matList.get(targetData).specified)) {
-						e.getPlayer().sendMessage(ChatColor.RED + "The block type " + blocks.get(i).getBlockData().getClass().getSimpleName() + " was not able to correctly transfer data. This is an error. Please report it with this message and it will be fixed ASAP.");
-					}
-					plugin.getCoreProtect().logPlacement(e.getPlayer().getName(), blocks.get(i).getLocation(), blocks.get(i).getType(), blocks.get(i).getBlockData());
-					//setBlockInNativeWorld(blocks.get(i), BlockMath.materialIds.get(targetMat), false);
-				}
-			}
-			if(change.getBlockList().keySet().size() > 0)
-				tracker.addChange(change);
-			//System.out.println("[BT] It took " + (System.currentTimeMillis() - startTime)/1000d + " seconds to change the blocks.");
+			
+			setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
 		}
+	}
+	
+	private static List<BlockData> getBlockList(Map<BlockData, BTBMeta> matList){
+		List<BlockData> blockList = new ArrayList<BlockData>();
+		for(BlockData block : matList.keySet()) {
+			for(int i = 0; i < matList.get(block).amount; i++)
+				blockList.add(block);
+		}
+		return blockList;
+	}
+	
+	private static void setBlocksInArea(List<Block> area, List<BlockData> blockList, Player p, Map<BlockData, BTBMeta> matList, boolean blockUpdates) {
+        Alteration change = new Alteration();
+		for(int i = 0; i < area.size(); i++) {
+			int id = (int) (Math.random()*blockList.size());
+			BlockData targetData = (BlockData)  blockList.get(id);
+			if(!area.get(i).getBlockData().equals(targetData)) {
+				change.addBlock(area.get(i));
+				plugin.getCoreProtect().logRemoval(p.getName(), area.get(i).getLocation(), area.get(i).getType(), area.get(i).getBlockData());
+				if(!setBlockData(area.get(i), targetData.clone(), blockUpdates, matList.get(targetData).specified)) {
+					p.sendMessage(ChatColor.RED + "The block type " + area.get(i).getBlockData().getClass().getSimpleName() + " was not able to correctly transfer data. This is an error. Please report it with this message and it will be fixed ASAP.");
+				}
+				plugin.getCoreProtect().logPlacement(p.getName(), area.get(i).getLocation(), area.get(i).getType(), area.get(i).getBlockData());
+			}
+		}
+		
+		ChangeTracker tracker = ChangeTracker.getChangesForPlayer(p.getUniqueId());
+        if(tracker == null)
+        	tracker = new ChangeTracker(p.getUniqueId());
+		
+		if(change.getBlockList().keySet().size() > 0)
+			tracker.addChange(change);
+	}
+	
+	private static boolean setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
+		//If the blocks are of the same type, (ie both walls), then transfer data from the previous block to the other.
+		if(!customProps && targetBlock.getBlockData().getClass().equals(targetData.getClass())) {
+			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
+		}
+		//This would be null if there was an error in trying to transfer data from one block to another.
+		if(targetData == null)
+			return false;
+		targetBlock.setBlockData(targetData, updates);
+		return true;
 	}
 	
 	@EventHandler
@@ -128,7 +150,7 @@ public class PlayerListener implements Listener{
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public static void onInventoryClickEvent(InventoryClickEvent e) {
-		if(e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.AIR)
+		if(e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)
 			return;
 		NBTItem nbti = new NBTItem(e.getCurrentItem());
 		if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && e.getCurrentItem().getType() == Material.FILLED_MAP) {
@@ -153,18 +175,6 @@ public class PlayerListener implements Listener{
 		if(e.getAction().equals(Action.PHYSICAL) && e.hasBlock() && e.getPlayer().getGameMode().equals(GameMode.CREATIVE) && e.getClickedBlock().getType() == Material.FARMLAND) {
 			e.setCancelled(true);
 		}
-	}
-	
-	private static boolean setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
-		//If the blocks are of the same type, (ie both walls), then transfer data from the previous block to the other.
-		if(!customProps && targetBlock.getBlockData().getClass().equals(targetData.getClass())) {
-			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
-		}
-		//This would be null if there was an error in trying to transfer data from one block to another.
-		if(targetData == null)
-			return false;
-		targetBlock.setBlockData(targetData, updates);
-		return true;
 	}
 	
 	private static Set<Material> dataToMaterialSet(Set<BlockData> list){

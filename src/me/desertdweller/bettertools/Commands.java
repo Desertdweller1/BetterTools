@@ -79,13 +79,18 @@ public class Commands implements CommandExecutor{
 			
 			nbti.setString("Noise", noise.toString());
 			if(args.length > 1) {
-				int radius = Integer.parseInt(args[1]);
-				if(radius > plugin.getConfig().getInt("maxRadius"))
-					radius = plugin.getConfig().getInt("maxRadius");
-				
-				nbti.setInteger("Radius", radius);
-				
+				try {
+					int radius = Integer.parseInt(args[1]);
+					if(radius > plugin.getConfig().getInt("maxRadius"))
+						radius = plugin.getConfig().getInt("maxRadius");
+					
+					nbti.setInteger("Radius", radius);
+				}catch(NumberFormatException nfe) {
+					sender.sendMessage(ChatColor.RED + "Please use a number.");	
+					return true;
+				}
 			}
+			
 			ItemStack item = nbti.getItem();
 			ItemMeta meta = item.getItemMeta();
 			meta.setLore(getLore(nbti));

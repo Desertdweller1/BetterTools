@@ -132,14 +132,6 @@ public class BlockMath {
     		return null;
     	}
     	switch(z) {
-    	case CraftStairs:
-    		Stairs targetStairs = (Stairs) target;
-    		Stairs propertyStairs = (Stairs) properties;
-    		targetStairs.setFacing(propertyStairs.getFacing());
-    		targetStairs.setHalf(propertyStairs.getHalf());
-    		targetStairs.setShape(propertyStairs.getShape());
-    		targetStairs.setWaterlogged(propertyStairs.isWaterlogged());
-    		return targetStairs;
     	case CraftAgeable:
     		Ageable targetAgeable = (Ageable) target;
     		Ageable propertyAgeable = (Ageable) properties;
@@ -320,7 +312,7 @@ public class BlockMath {
     		targetFurnace.setFacing(propertyFurnace.getFacing());
     		targetFurnace.setLit(propertyFurnace.isLit());
     		return targetFurnace;
-    	case CraftGate:
+    	case CraftFenceGate:
     		Gate targetGate = (Gate) target;
     		Gate propertyGate = (Gate) properties;
     		targetGate.setFacing(propertyGate.getFacing());
@@ -498,6 +490,14 @@ public class BlockMath {
     		targetSign.setRotation(propertySign.getRotation());
     		targetSign.setWaterlogged(propertySign.isWaterlogged());
     		return targetSign;
+    	case CraftStairs:
+    		Stairs targetStairs = (Stairs) target;
+    		Stairs propertyStairs = (Stairs) properties;
+    		targetStairs.setFacing(propertyStairs.getFacing());
+    		targetStairs.setHalf(propertyStairs.getHalf());
+    		targetStairs.setShape(propertyStairs.getShape());
+    		targetStairs.setWaterlogged(propertyStairs.isWaterlogged());
+    		return targetStairs;
     	case CraftStepAbstract:
     		Slab targetSlab = (Slab) target;
     		Slab propertySlab = (Slab) properties;
@@ -672,6 +672,6 @@ public class BlockMath {
 }
 
 enum CLAZZ {
-	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFire, CraftFluid, CraftFurnaceFurace, CraftGate, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
+	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFenceGate, CraftFire, CraftFluid, CraftFurnaceFurace, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
 
 }
