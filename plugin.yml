@@ -48,6 +48,9 @@ commands:
   bt snowtool:
     description: Creates a snow tool.
     usage: /bt snowtool [radius]
+  bt blockdatatest:
+    description: A dev tool.
+    useage: /bt blockdatatest
 permissions:
    bt.use:
       description: Allows the player to use the tools.

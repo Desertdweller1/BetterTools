@@ -2,6 +2,7 @@ package me.desertdweller.bettertools;
 
 import java.util.ArrayList;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -249,6 +250,24 @@ public class Commands implements CommandExecutor{
 				p.getInventory().setItemInMainHand(item);
 			}else {
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
+			}
+			return true;
+		}else if(args[0].equalsIgnoreCase("blockdatatest")){ 
+			if(!sender.isOp() || !(sender instanceof Player)) {
+				return true;
+			}
+			
+			Player p = (Player) sender;
+			p.sendMessage("Commencing test at your location");
+			Location loc = p.getLocation();
+			
+			for(Material mat : Material.values()) {
+				if(!mat.isBlock())
+					continue;
+				loc.getBlock().setType(mat, false);
+				if(BlockMath.applyProperties(loc.getBlock().getBlockData().clone(), loc.getBlock().getBlockData()) == null) {
+					p.sendMessage(ChatColor.RED + loc.getBlock().getBlockData().getClass().getSimpleName() + " failed..  " + loc.getBlock().getType().name());
+				}
 			}
 			return true;
 		}else if(args[0].equalsIgnoreCase("blocks")) {
