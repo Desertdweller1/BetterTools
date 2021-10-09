@@ -45,6 +45,9 @@ commands:
   bt refreshtool:
     description: Refreshes the lore for the tool you are holding.
     usage: /bt refreshtool
+  bt snowtool:
+    description: Creates a snow tool.
+    usage: /bt snowtool [radius]
 permissions:
    bt.use:
       description: Allows the player to use the tools.

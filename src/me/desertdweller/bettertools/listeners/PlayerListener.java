@@ -44,23 +44,61 @@ public class PlayerListener implements Listener{
 				e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to use that tool.");
 				return;
 			}
-			Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockMath.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
-			List<Block> blocks;
-			Noise noise = new Noise(nbti.getString("Noise"));
-			//long startTime = System.currentTimeMillis();
-			if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
-				blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(nbti.getString("Mask"), false), noise);
-			}else {
-				blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
+			usePaintBrush(e, nbti);
+		}else if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && nbti.getString("Item").equals("Snow Tool")) {
+			e.setCancelled(true);
+			if(!e.getPlayer().hasPermission("bt.use")) {
+				e.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to use that tool.");
+				return; 
 			}
-			if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
-				blocks = BlockMath.getBlocksTouching(blocks, BlockMath.stringToHashMap(nbti.getString("Touching"), false));
-			}
-
-			Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
-			
-			setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
+			useSnowBrush(e, nbti);
 		}
+	}
+	
+	//TODO: Add in simulate snow option
+	//
+	private static void useSnowBrush(PlayerInteractEvent e, NBTItem nbti) {
+		if(nbti.getBoolean("Smooth") == false) {
+			
+		}else {
+	        Alteration change = new Alteration();
+			Set<Material> medium = new HashSet<Material>();
+			medium.add(Material.AIR);
+			Block centerBlock = e.getPlayer().getTargetBlock(medium, 200);
+			List<Block> blocks;
+			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap("snow,snow_block", false), new Noise(), true);
+			
+			for(Block block : blocks) {
+				change.addBlock(block);
+				BlockMath.smoothSnowBlock(block);
+			}
+			
+			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(e.getPlayer().getUniqueId());
+	        if(tracker == null)
+	        	tracker = new ChangeTracker(e.getPlayer().getUniqueId());
+			
+			if(change.getBlockList().keySet().size() > 0)
+				tracker.addChange(change);
+		}
+	}
+	
+	private static void usePaintBrush(PlayerInteractEvent e, NBTItem nbti) {
+		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockMath.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
+		List<Block> blocks;
+		Noise noise = new Noise(nbti.getString("Noise"));
+		//long startTime = System.currentTimeMillis();
+		if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
+			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(nbti.getString("Mask"), false), noise, false);
+		}else {
+			blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
+		}
+		if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
+			blocks = BlockMath.getBlocksTouching(blocks, BlockMath.stringToHashMap(nbti.getString("Touching"), false));
+		}
+
+		Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
+		
+		setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
 	}
 	
 	private static List<BlockData> getBlockList(Map<BlockData, BTBMeta> matList){

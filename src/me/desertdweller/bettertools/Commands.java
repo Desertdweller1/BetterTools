@@ -93,7 +93,39 @@ public class Commands implements CommandExecutor{
 			
 			ItemStack item = nbti.getItem();
 			ItemMeta meta = item.getItemMeta();
-			meta.setLore(getLore(nbti));
+			meta.setLore(getPaintLore(nbti));
+			item.setItemMeta(meta);
+			p.getInventory().addItem(item);
+			return true;
+		}else if(args[0].equalsIgnoreCase("snowtool")) {
+			if(!sender.hasPermission("bt.create")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to use that command.");
+				return true;
+			}
+			Player p = (Player) sender;
+			
+			NBTItem nbti = new NBTItem(new ItemStack(Material.IRON_SHOVEL));
+			nbti.setString("Plugin", "BetterTools");
+			nbti.setString("Item", "Snow Tool");
+			nbti.setInteger("Radius", 5);
+			nbti.setBoolean("Smooth", true);
+			
+			if(args.length > 1) {
+				try {
+					int radius = Integer.parseInt(args[1]);
+					if(radius > plugin.getConfig().getInt("maxRadius"))
+						radius = plugin.getConfig().getInt("maxRadius");
+					
+					nbti.setInteger("Radius", radius);
+				}catch(NumberFormatException nfe) {
+					sender.sendMessage(ChatColor.RED + "Please use a number.");	
+					return true;
+				}
+			}
+			
+			ItemStack item = nbti.getItem();
+			ItemMeta meta = item.getItemMeta();
+			meta.setLore(getSnowLore(nbti));
 			item.setItemMeta(meta);
 			p.getInventory().addItem(item);
 			return true;
@@ -109,7 +141,7 @@ public class Commands implements CommandExecutor{
 			}
 			ItemStack item = p.getInventory().getItemInMainHand();
 			NBTItem nbti = new NBTItem(item);
-			if(!nbti.hasKey("Item") || !nbti.getString("Item").equals("Paint Tool")) {
+			if(!nbti.hasKey("Item") || (!nbti.getString("Item").equals("Paint Tool") && !nbti.getString("Item").equals("Snow Tool"))) {
 				p.sendMessage(ChatColor.RED + "You need to hold a bt tool while using this command.");
 				return true;
 			}
@@ -151,7 +183,10 @@ public class Commands implements CommandExecutor{
 			}
 			ItemStack item = nbti.getItem();
 			ItemMeta meta = item.getItemMeta();
-			meta.setLore(getLore(nbti));
+			if(nbti.getString("Item").equals("Paint Tool"))
+				meta.setLore(getPaintLore(nbti));
+			if(nbti.getString("Item").equals("Snow Tool"))
+				meta.setLore(getSnowLore(nbti));
 			item.setItemMeta(meta);
 			p.getInventory().setItemInMainHand(item);
 			return true;
@@ -181,7 +216,7 @@ public class Commands implements CommandExecutor{
 					}
 					ItemStack item = nbti.getItem();
 					ItemMeta meta = item.getItemMeta();
-					meta.setLore(getLore(nbti));
+					meta.setLore(getPaintLore(nbti));
 					item.setItemMeta(meta);
 					p.getInventory().setItemInMainHand(item);
 				}else {
@@ -206,7 +241,10 @@ public class Commands implements CommandExecutor{
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				ItemStack item = nbti.getItem();
 				ItemMeta meta = item.getItemMeta();
-				meta.setLore(getLore(nbti));
+				if(nbti.getString("Item").equals("Paint Tool"))
+					meta.setLore(getPaintLore(nbti));
+				if(nbti.getString("Item").equals("Snow Tool"))
+					meta.setLore(getSnowLore(nbti));
 				item.setItemMeta(meta);
 				p.getInventory().setItemInMainHand(item);
 			}else {
@@ -234,7 +272,7 @@ public class Commands implements CommandExecutor{
 					}
 					ItemStack item = nbti.getItem();
 					ItemMeta meta = item.getItemMeta();
-					meta.setLore(getLore(nbti));
+					meta.setLore(getPaintLore(nbti));
 					item.setItemMeta(meta);
 					p.getInventory().setItemInMainHand(item);
 				}else {
@@ -261,7 +299,7 @@ public class Commands implements CommandExecutor{
 					nbti.setBoolean("Updates", Boolean.valueOf(args[1]));
 					ItemStack item = nbti.getItem();
 					ItemMeta meta = item.getItemMeta();
-					meta.setLore(getLore(nbti));
+					meta.setLore(getPaintLore(nbti));
 					item.setItemMeta(meta);
 					p.getInventory().setItemInMainHand(item);
 				}else {
@@ -317,7 +355,7 @@ public class Commands implements CommandExecutor{
 						nbti.setString("Through", args[1]);
 						ItemStack item = nbti.getItem();
 						ItemMeta meta = item.getItemMeta();
-						meta.setLore(getLore(nbti));
+						meta.setLore(getPaintLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
 					}else {
@@ -349,14 +387,20 @@ public class Commands implements CommandExecutor{
 						nbti.setString("Touching", args[1]);
 						ItemStack item = nbti.getItem();
 						ItemMeta meta = item.getItemMeta();
-						meta.setLore(getLore(nbti));
+						if(nbti.getString("Item").equals("Paint Tool"))
+							meta.setLore(getPaintLore(nbti));
+						if(nbti.getString("Item").equals("Snow Tool"))
+							meta.setLore(getSnowLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
 					}else if(invalidName.equalsIgnoreCase("any") || invalidName.equalsIgnoreCase("empty") || invalidName.equalsIgnoreCase("off")){
 						nbti.setString("Touching", "");
 						ItemStack item = nbti.getItem();
 						ItemMeta meta = item.getItemMeta();
-						meta.setLore(getLore(nbti));
+						if(nbti.getString("Item").equals("Paint Tool"))
+							meta.setLore(getPaintLore(nbti));
+						if(nbti.getString("Item").equals("Snow Tool"))
+							meta.setLore(getSnowLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
 						p.sendMessage("Touching list cleared");
@@ -454,7 +498,10 @@ public class Commands implements CommandExecutor{
 				}
 				ItemStack item = nbti.getItem();
 				ItemMeta meta = item.getItemMeta();
-				meta.setLore(getLore(nbti));
+				if(nbti.getString("Item").equals("Paint Tool"))
+					meta.setLore(getPaintLore(nbti));
+				if(nbti.getString("Item").equals("Snow Tool"))
+					meta.setLore(getSnowLore(nbti));
 				item.setItemMeta(meta);
 				p.getInventory().setItemInMainHand(item);
 			}else {
@@ -493,9 +540,10 @@ public class Commands implements CommandExecutor{
 	sender.sendMessage(ChatColor.GRAY + "This command followed by almost any concept or parameter mentioned, will give a brief explaination of it.");
 	}
 	
-	private ArrayList<String> getLore(NBTItem item){
+	private ArrayList<String> getPaintLore(NBTItem item){
 		ArrayList<String> lore = new ArrayList<String>();
-		
+
+		lore.add(ChatColor.GRAY + "Paint Brush");
 		lore.add(ChatColor.GOLD + "Radius: " + ChatColor.WHITE + item.getInteger("Radius"));
 		
 		String loreConstructor = ChatColor.GOLD + "Painting: " + ChatColor.WHITE;
@@ -595,6 +643,59 @@ public class Commands implements CommandExecutor{
 			lore.add(ChatColor.GOLD + "Noise Max Val: " + ChatColor.WHITE + noise.max);
 		}
 		
+		return lore;
+	}
+	
+	private ArrayList<String> getSnowLore(NBTItem item){
+		ArrayList<String> lore = new ArrayList<String>();
+
+		lore.add(ChatColor.GRAY + "Snow Brush");
+		lore.add(ChatColor.GOLD + "Radius: " + ChatColor.WHITE + item.getInteger("Radius"));
+		int loopTracker = 0;
+		
+		if(item.getString("Touching") != "") {
+			String loreConstructor = ChatColor.GOLD + "Touching: " + ChatColor.WHITE;
+			loopTracker = 0;
+			for(int i = 0; i < item.getString("Touching").split(",").length; i++) {
+				loreConstructor = loreConstructor + item.getString("Touching").split(",")[i];
+				if(loopTracker == 2) {
+					loopTracker = 0;
+					lore.add(loreConstructor);
+					loreConstructor = ChatColor.WHITE + "    ";
+				}else {
+					if(i != item.getString("Touching").split(",").length-1)
+						loreConstructor = loreConstructor + ",";
+					loopTracker++;
+				}
+			}
+			if(!loreConstructor.equals("    "))
+				lore.add(loreConstructor);
+		}else {
+			lore.add(ChatColor.GOLD + "Touching: " + ChatColor.WHITE + "Any");
+		}
+		
+		Noise noise = new Noise(item.getString("Noise"));
+		
+		if(noise.method.equals("none")) {
+			lore.add(ChatColor.GOLD + "Noise Method: " + ChatColor.WHITE + "None");
+		}else if(noise.method.equals("turb")) {
+			lore.add(ChatColor.GOLD + "Noise Method: " + ChatColor.WHITE + "Turbulence");
+			lore.add(ChatColor.GOLD + "Noise Scale: " + ChatColor.WHITE + noise.scale);
+			lore.add(ChatColor.GOLD + "Noise X Scew: " + ChatColor.WHITE + noise.xScew);
+			lore.add(ChatColor.GOLD + "Noise Y Scew: " + ChatColor.WHITE + noise.yScew);
+			lore.add(ChatColor.GOLD + "Noise Z Scew: " + ChatColor.WHITE + noise.zScew);
+			lore.add(ChatColor.GOLD + "Noise Min Val: " + ChatColor.WHITE + noise.min);
+			lore.add(ChatColor.GOLD + "Noise Max Val: " + ChatColor.WHITE + noise.max);
+			lore.add(ChatColor.GOLD + "Noise Freq: " + ChatColor.WHITE + noise.frequency);
+		}else if(noise.method.equals("perlin")) {
+			lore.add(ChatColor.GOLD + "Noise Method: " + ChatColor.WHITE + "Perlin");
+			lore.add(ChatColor.GOLD + "Noise Scale: " + ChatColor.WHITE + noise.scale);
+			lore.add(ChatColor.GOLD + "Noise X Scew: " + ChatColor.WHITE + noise.xScew);
+			lore.add(ChatColor.GOLD + "Noise Y Scew: " + ChatColor.WHITE + noise.yScew);
+			lore.add(ChatColor.GOLD + "Noise Z Scew: " + ChatColor.WHITE + noise.zScew);
+			lore.add(ChatColor.GOLD + "Noise Min Val: " + ChatColor.WHITE + noise.min);
+			lore.add(ChatColor.GOLD + "Noise Max Val: " + ChatColor.WHITE + noise.max);
+		}
 		return lore;
 	}
 

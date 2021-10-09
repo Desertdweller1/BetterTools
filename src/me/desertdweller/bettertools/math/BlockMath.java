@@ -43,7 +43,7 @@ public class BlockMath {
         return blocks;
     }
     
-    public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise noise) {
+    public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise noise, boolean snowBrush) {
         List<Block> blocks = new ArrayList<Block>();
         List<Material> nonCustomMats = getNonCustomMaterials(mask);
         for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
@@ -56,6 +56,8 @@ public class BlockMath {
                 				blocks.add(location.getWorld().getBlockAt(x, y, z));
                 		}else if(mask.containsKey(location.getWorld().getBlockAt(x,y,z).getBlockData()) && noise.getPoint(x, y, z)) {
                     		blocks.add(location.getWorld().getBlockAt(x, y, z));
+                		}else if(snowBrush && location.getWorld().getBlockAt(x,y-1,z).getType() != Material.AIR && location.getWorld().getBlockAt(x,y,z).getType() == Material.AIR && noise.getPoint(x, y, z)) {
+                			blocks.add(location.getWorld().getBlockAt(x, y, z));
                 		}
                 	}
                 }
@@ -669,7 +671,82 @@ public class BlockMath {
     	}
     	return null;
     }
+
+	public static Block smoothSnowBlock(Block target) {
+		if(target.getRelative(BlockFace.UP).getType() == Material.SNOW || target.getRelative(BlockFace.UP).getType() == Material.SNOW_BLOCK) {
+			target.setType(Material.SNOW, false);
+			Snow blockData = ((Snow) target.getBlockData());
+			blockData.setLayers(8);
+			target.setBlockData(blockData, false);
+			return target;
+		}
+		if(target.getRelative(BlockFace.DOWN).getType() == Material.SNOW && ((Snow) target.getRelative(BlockFace.DOWN).getBlockData()).getLayers() != 8 || target.getRelative(BlockFace.DOWN).isPassable() || target.getRelative(BlockFace.DOWN).isLiquid()) {
+			target.setType(Material.AIR, false);
+			return target;
+		}
+		
+		int averageHeight = getAverageSurroundingHeight(target);
+		if(averageHeight <= 8) {
+			target.setType(Material.AIR, false);
+			return target;
+		}else if(averageHeight > 15) {
+			target.setType(Material.SNOW, false);
+			Snow blockData = ((Snow) target.getBlockData());
+			blockData.setLayers(8);
+			target.setBlockData(blockData, false);
+		}else{
+			target.setType(Material.SNOW, false);
+			Snow blockData = ((Snow) target.getBlockData());
+			blockData.setLayers(averageHeight-8);
+			target.setBlockData(blockData, false);
+		}
+		return target;
+	}
+	
+	private static int getAverageSurroundingHeight(Block target) {
+		float totalSurroundingHeight = 0;
+		
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.NORTH);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.NORTH_NORTH_EAST);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.EAST);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.SOUTH_EAST);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.SOUTH);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.SOUTH_WEST);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.WEST);
+		totalSurroundingHeight += getDirectionTotalHeight(target,BlockFace.NORTH_WEST);
+		
+		return Math.round(totalSurroundingHeight/24);
+	}
+	
+	private static int getDirectionTotalHeight(Block origin, BlockFace direction) {
+		int totalHeight = 0;
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(BlockFace.DOWN));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(BlockFace.UP));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction).getRelative(BlockFace.DOWN));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction).getRelative(BlockFace.UP));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction).getRelative(direction).getRelative(BlockFace.DOWN));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction).getRelative(direction));
+		totalHeight += getHeightOfBlock(origin.getRelative(direction).getRelative(direction).getRelative(direction).getRelative(BlockFace.UP));
+		return totalHeight;
+	}
+	
+	private static int getHeightOfBlock(Block block) {
+		if(block.isPassable() || block.isLiquid())
+			return 0;
+		switch(block.getType()) {
+		case SNOW:
+			Snow snow = (Snow) block.getBlockData();
+			return snow.getLayers();
+		case AIR:
+			return 0;
+		default:
+			return 8;
+		}
+	}
 }
+
 
 enum CLAZZ {
 	CraftAgeable, CraftAnaloguePowerable, CraftAttachable, CraftBamboo, CraftBed, CraftBeehive, CraftBell, CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCampfire, CraftChain, CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralWallFan, CraftDaylightDetector, CraftDirectional, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFenceGate, CraftFire, CraftFluid, CraftFurnaceFurace, CraftGlassPane, CraftGrindstone, CraftHopper, CraftJigsaw, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves, CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable, CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftRail, CraftRedstoneRail, CraftRedstoneWallTorch, CraftRedstoneWire, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding, CraftSeaPickle, CraftSign, CraftStepAbstract, CraftSnow, CraftSnowable, CraftStairs, CraftStructureBlock, CraftSwitch, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftWallSign, CraftWaterlogged, CraftCrops
