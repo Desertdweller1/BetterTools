@@ -165,43 +165,53 @@ public class BlockMath {
 	}
 
 	public static List<Block> getBlocksTouching(List<Block> inputBlocks, Map<BlockData, BTBMeta> touchLimits) {
-		List<Material> nonCustomMats = getNonCustomMaterials(touchLimits);
+		Map<Material, BTBMeta> nonCustomMats = getNonCustomMaterialsWithMeta(touchLimits);
 		List<Block> outputBlocks = new ArrayList<Block>();
 		for (Block block : inputBlocks) {
-			if (nonCustomMats.contains(block.getRelative(1, 0, 0).getType())) {
+			if (nonCustomMats.containsKey(block.getRelative(1, 0, 0).getType()) && nonCustomMats.get(block.getRelative(1, 0, 0).getType()).containsParam("west", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(1, 0, 0).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(1, 0, 0).getBlockData()) && touchLimits.get(block.getRelative(1, 0, 0).getBlockData()).containsParam("west", true)) {
 				outputBlocks.add(block);
-			} else if (nonCustomMats.contains(block.getRelative(-1, 0, 0).getType())) {
+			} else if (nonCustomMats.containsKey(block.getRelative(-1, 0, 0).getType()) && nonCustomMats.get(block.getRelative(-1, 0, 0).getType()).containsParam("east", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(-1, 0, 0).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(-1, 0, 0).getBlockData()) && touchLimits.get(block.getRelative(-1, 0, 0).getBlockData()).containsParam("east", true)) {
 				outputBlocks.add(block);
-			} else if (nonCustomMats.contains(block.getRelative(0, 1, 0).getType())) {
+			} else if (nonCustomMats.containsKey(block.getRelative(0, 1, 0).getType()) && nonCustomMats.get(block.getRelative(0, 1, 0).getType()).containsParam("down", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(0, 1, 0).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(0, 1, 0).getBlockData()) && touchLimits.get(block.getRelative(0, 1, 0).getBlockData()).containsParam("down", true)) {
 				outputBlocks.add(block);
-			} else if (nonCustomMats.contains(block.getRelative(0, -1, 0).getType())) {
+			} else if (nonCustomMats.containsKey(block.getRelative(0, -1, 0).getType()) && nonCustomMats.get(block.getRelative(0, -1, 0).getType()).containsParam("up", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(0, -1, 0).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(0, -1, 0).getBlockData()) && touchLimits.get(block.getRelative(0, -1, 0).getBlockData()).containsParam("up", true)) {
 				outputBlocks.add(block);
-			} else if (nonCustomMats.contains(block.getRelative(0, 0, 1).getType())) {
+			} else if (nonCustomMats.containsKey(block.getRelative(0, 0, 1).getType()) && nonCustomMats.get(block.getRelative(0, 0, 1).getType()).containsParam("south", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(0, 0, 1).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(0, 0, 1).getBlockData()) && touchLimits.get(block.getRelative(0, 0, 1).getBlockData()).containsParam("south", true)) {
 				outputBlocks.add(block);
-			} else if (nonCustomMats.contains(block.getRelative(0, 0, -1).getType())) {
+			} else if (nonCustomMats.containsKey(block.getRelative(0, 0, -1).getType()) && nonCustomMats.get(block.getRelative(0, 0, -1).getType()).containsParam("north", true)) {
 				outputBlocks.add(block);
-			} else if (touchLimits.containsKey(block.getRelative(0, 0, -1).getBlockData())) {
+			} else if (touchLimits.containsKey(block.getRelative(0, 0, -1).getBlockData()) && touchLimits.get(block.getRelative(0, 0, -1).getBlockData()).containsParam("north", true)) {
 				outputBlocks.add(block);
 			}
 		}
 		return outputBlocks;
 	}
 
+	//This is for all of the blocks given with no defined blockdata. It is intended to be used as a general case instead of being limited to the default blockstates when comparing.
 	private static List<Material> getNonCustomMaterials(Map<BlockData, BTBMeta> map) {
 		ArrayList<Material> materials = new ArrayList<Material>();
 		for (BlockData block : map.keySet()) {
 			if (!map.get(block).specified)
 				materials.add(block.getMaterial());
+		}
+		return materials;
+	}
+	
+	private static Map<Material, BTBMeta> getNonCustomMaterialsWithMeta(Map<BlockData, BTBMeta> map) {
+		Map<Material, BTBMeta> materials = new HashMap<Material, BTBMeta>();
+		for (BlockData block : map.keySet()) {
+			if (!map.get(block).specified)
+				materials.put(block.getMaterial(), map.get(block));
 		}
 		return materials;
 	}
@@ -809,13 +819,21 @@ public class BlockMath {
 		String[] materialNames = string.split(",");
 		HashMap<BlockData, BTBMeta> materialList = new HashMap<BlockData, BTBMeta>();
 		for (String materialString : materialNames) {
+			String customParams = null;
+			if(materialString.contains("<")) {
+				customParams = materialString.split("<")[1].replace("|", ",");
+				materialString = materialString.split("<")[0];
+				customParams = customParams.replace(">", "");
+			}
+			
 			materialString = materialString.replace('|', ',');
 			// If no specified additional amounts.
 			if (materialString.split("%").length == 1) {
-				materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1));
-			} else if (materialString.split("%").length == 2) {
+				materialList.put(Bukkit.createBlockData(materialString), new BTBMeta(materialString.contains("["), 1, customParams));
+			}else if (materialString.split("%").length == 2) {
 				materialList.put(Bukkit.createBlockData(materialString.split("%")[1]),
-						new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0])));
+						new BTBMeta(materialString.contains("["), Integer.parseInt(materialString.split("%")[0]),
+						customParams));
 
 			}
 		}
@@ -864,29 +882,51 @@ public class BlockMath {
 		return strings;
 	}
 
-	public static String checkStringList(String list) {
+	public static String checkStringList(String list, String methodName) {
 		// 2%oak_stairs,spruce_stairs[facing=north|type=top],small_stone_bricks
 		String[] materialNames = list.split(",");
 		// 2%oak_stairs spruce_stairs[facing=north|type=top] small_stone_bricks
 		for (String materialString : materialNames) {
+			String originalString = materialString;
+			// 2%oak_stairs spruce_stairs[facing=north,type=top] small_stone_bricks
+			//Checks to make sure the custom parameters are valid, and removes them from the check.
+			if(materialString.contains("<")) {
+				if(checkCustomParams(materialString.split("<")[1], methodName)) {
+					return originalString;
+				}
+				materialString = materialString.split("<")[0];
+			}
 			materialString = materialString.replace('|', ',');
-			// 2%oak_stairs spruce_stairs[facing=north type=top] small_stone_bricks
 			if (materialString.split("%").length == 1) {
-				// 2 oak_stairs spruce_stairs[facing=north type=top] small_stone_bricks
+				// 2 oak_stairs spruce_stairs[facing=north,type=top] small_stone_bricks
 				try {
 					Bukkit.createBlockData(materialString);
 				} catch (IllegalArgumentException e) {
-					return materialString;
+					return originalString;
 				}
 			} else if (materialString.split("%").length == 2) {
 				try {
 					Bukkit.createBlockData(materialString.split("%")[1]);
 				} catch (IllegalArgumentException e) {
-					return materialString;
+					return originalString;
 				}
 			}
 		}
 		return null;
+	}
+	
+	private static boolean checkCustomParams(String params, String methodName) {
+		switch(methodName){
+		case "touching":
+			params = params.toLowerCase();
+			params = params.replace(">", "");
+			for(String param : params.split("|")) {
+				if(!param.equals("up") && !param.equals("down") && !param.equals("north") && !param.equals("south") && !param.equals("west") && !param.equals("east")) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public static Block smoothSnowBlock(Block target) {

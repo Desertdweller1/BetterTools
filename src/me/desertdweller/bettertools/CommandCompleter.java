@@ -23,6 +23,7 @@ public class CommandCompleter implements TabCompleter{
 	public CommandCompleter() {
 		firstLevelArguments.add("help");
 		firstLevelArguments.add("tool");
+		firstLevelArguments.add("snowtool");
 		firstLevelArguments.add("settool");
 		firstLevelArguments.add("radius");
 		firstLevelArguments.add("mask");

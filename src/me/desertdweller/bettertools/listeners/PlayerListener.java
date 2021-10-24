@@ -142,7 +142,6 @@ public class PlayerListener implements Listener{
 		//This would be null if there was an error in trying to transfer data from one block to another.
 		if(targetData == null)
 			return false;
-		System.out.println(targetData);
 		targetBlock.setBlockData(targetData, updates);
 		return true;
 	}
