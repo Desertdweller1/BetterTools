@@ -35,7 +35,7 @@ public class PlayerListener implements Listener{
 
 	@EventHandler
 	public static void onPlayerInteract(PlayerInteractEvent e) {
-		if(e.getItem() == null)
+		if(e.getItem() == null || e.getItem().getType() == Material.AIR)
 			return;
 		NBTItem nbti = new NBTItem(e.getItem());
 		if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools") && nbti.getString("Item").equals("Paint Tool")) {

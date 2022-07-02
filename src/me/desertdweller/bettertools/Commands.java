@@ -2,6 +2,7 @@ package me.desertdweller.bettertools;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -19,6 +20,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Commands implements CommandExecutor{
 	private static BetterTools plugin = BetterTools.getPlugin(BetterTools.class);
+	//TODO: Add Fill holes world edit command
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -253,20 +255,32 @@ public class Commands implements CommandExecutor{
 			}
 			return true;
 		}else if(args[0].equalsIgnoreCase("blockdatatest")){ 
-			if(!sender.isOp() || !(sender instanceof Player)) {
-				return true;
+			if(args.length == 2 && args[1].equals("true")) {
+				plugin.getLogger().info("Commencing test at 0, 253, 0");
+				Location loc = new Location(Bukkit.getWorlds().get(0), 0, 253, 0);
+				
+				for(Material mat : Material.values()) {
+					if(!mat.isBlock())
+						continue;
+					loc.getBlock().setType(mat, false);
+					if(BlockMath.applyProperties(loc.getBlock().getBlockData().clone(), loc.getBlock().getBlockData()) == null) {
+						plugin.getLogger().warning(ChatColor.RED + loc.getBlock().getBlockData().getClass().getSimpleName() + " failed..  " + loc.getBlock().getType().name());
+					}
+				}
 			}
 			
-			Player p = (Player) sender;
-			p.sendMessage("Commencing test at your location");
-			Location loc = p.getLocation();
-			
-			for(Material mat : Material.values()) {
-				if(!mat.isBlock())
-					continue;
-				loc.getBlock().setType(mat, false);
-				if(BlockMath.applyProperties(loc.getBlock().getBlockData().clone(), loc.getBlock().getBlockData()) == null) {
-					p.sendMessage(ChatColor.RED + loc.getBlock().getBlockData().getClass().getSimpleName() + " failed..  " + loc.getBlock().getType().name());
+			if(sender.isOp() && sender instanceof Player) {
+				Player p = (Player) sender;
+				p.sendMessage("Commencing test at your location");
+				Location loc = p.getLocation();
+				
+				for(Material mat : Material.values()) {
+					if(!mat.isBlock())
+						continue;
+					loc.getBlock().setType(mat, false);
+					if(BlockMath.applyProperties(loc.getBlock().getBlockData().clone(), loc.getBlock().getBlockData()) == null) {
+						p.sendMessage(ChatColor.RED + loc.getBlock().getBlockData().getClass().getSimpleName() + " failed..  " + loc.getBlock().getType().name());
+					}
 				}
 			}
 			return true;
