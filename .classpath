@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="D:/Programming/Atlas APIs/1.16 APIs/item-nbt-api-plugin-2.5.0.jar"/>
 	<classpathentry kind="lib" path="D:/Programming/Atlas APIs/1.16 APIs/CoreProtect-19.4.jar"/>
-	<classpathentry kind="lib" path="D:/Servers/1.17.1 Test Server/paper.jar"/>
-	<classpathentry kind="lib" path="D:/Programming/Atlas APIs/1.17 APIs/spigot-1.17.1.jar"/>
+	<classpathentry kind="lib" path="D:/Servers/1.18.2 Test Server/paper.jar"/>
+	<classpathentry kind="lib" path="D:/Programming/Atlas APIs/1.18 APIs/spigot-api-1.18.2-R0.1-20220605.001135-49-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

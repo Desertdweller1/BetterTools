@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.FaceAttachable;
@@ -21,6 +22,7 @@ import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.block.data.Powerable;
 import org.bukkit.block.data.Rail;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.block.data.Snowable;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.AmethystCluster;
@@ -34,6 +36,8 @@ import org.bukkit.block.data.type.BubbleColumn;
 import org.bukkit.block.data.type.Cake;
 import org.bukkit.block.data.type.Campfire;
 import org.bukkit.block.data.type.Candle;
+import org.bukkit.block.data.type.CaveVines;
+import org.bukkit.block.data.type.CaveVinesPlant;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.block.data.type.CommandBlock;
@@ -42,6 +46,7 @@ import org.bukkit.block.data.type.CoralWallFan;
 import org.bukkit.block.data.type.DaylightDetector;
 import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Dripleaf;
 import org.bukkit.block.data.type.EndPortalFrame;
 import org.bukkit.block.data.type.EnderChest;
 import org.bukkit.block.data.type.Farmland;
@@ -71,6 +76,7 @@ import org.bukkit.block.data.type.Scaffolding;
 import org.bukkit.block.data.type.SeaPickle;
 import org.bukkit.block.data.type.Sign;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.SmallDripleaf;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.block.data.type.Stairs;
 import org.bukkit.block.data.type.StructureBlock;
@@ -83,42 +89,6 @@ import org.bukkit.block.data.type.TripwireHook;
 import org.bukkit.block.data.type.TurtleEgg;
 import org.bukkit.block.data.type.Wall;
 import org.bukkit.block.data.type.WallSign;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftAnvil;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftBanner;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftBannerWall;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftBarrel;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftBeetroot;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftBigDripleafStem;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCandleCake;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCaveVines;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCaveVinesPlant;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCoralDead;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCoralFan;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCoralFanAbstract;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCoralFanWallAbstract;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftCoralPlant;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftDirtSnow;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftFloorSign;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftGlazedTerracotta;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftGrass;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftHangingRoots;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftHugeMushroom;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftIceFrost;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftKelp;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftPressurePlateBinary;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftRedstoneOre;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftReed;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftRotatable;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftShulkerBox;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftSmallDripleaf;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftStainedGlassPane;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftSweetBerryBush;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftTallPlantFlower;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftTwistingVines;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftWeatheringCopperSlab;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftWeatheringCopperStair;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftWeepingVines;
-import org.bukkit.craftbukkit.v1_17_R1.block.impl.CraftWoodButton;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
@@ -150,8 +120,7 @@ public class BlockMath {
 		return blocks;
 	}
 
-	public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask,
-			Noise noise, boolean snowBrush) {
+	public static List<Block> getNearbyBlocksMasked(Location location, int radius, Map<BlockData, BTBMeta> mask, Noise noise, boolean snowBrush) {
 		List<Block> blocks = new ArrayList<Block>();
 		List<Material> nonCustomMats = getNonCustomMaterials(mask);
 		for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
@@ -167,7 +136,7 @@ public class BlockMath {
 						} else if (mask.containsKey(location.getWorld().getBlockAt(x, y, z).getBlockData())
 								&& noise.getPoint(x, y, z)) {
 							blocks.add(location.getWorld().getBlockAt(x, y, z));
-						} else if (snowBrush && location.getWorld().getBlockAt(x, y - 1, z).getType() != Material.AIR
+						} else if (snowBrush && location.getWorld().getBlockAt(x, y-1, z).getType() != Material.AIR
 								&& location.getWorld().getBlockAt(x, y, z).getType() == Material.AIR
 								&& noise.getPoint(x, y, z)) {
 							blocks.add(location.getWorld().getBlockAt(x, y, z));
@@ -269,8 +238,8 @@ public class BlockMath {
 			targetAmethyst.setFacing(propertyAmethyst.getFacing());
 			return targetAmethyst;
 		case CraftAnvil:
-			CraftAnvil targetAnvil = (CraftAnvil) target;
-			CraftAnvil propertyAnvil = (CraftAnvil) properties;
+			Directional targetAnvil = (Directional) target;
+			Directional propertyAnvil = (Directional) properties;
 			targetAnvil.setFacing(propertyAnvil.getFacing());
 			return targetAnvil;
 		case CraftBamboo:
@@ -281,18 +250,18 @@ public class BlockMath {
 			targetBamboo.setStage(propertyBamboo.getStage());
 			return targetBamboo;
 		case CraftBanner:
-			CraftBanner targetBanner = (CraftBanner) target;
-			CraftBanner propertyBanner = (CraftBanner) properties;
+			Rotatable targetBanner = (Rotatable) target;
+			Rotatable propertyBanner = (Rotatable) properties;
 			targetBanner.setRotation(propertyBanner.getRotation());
 			return targetBanner;
 		case CraftBannerWall:
-			CraftBannerWall targetBannerWall = (CraftBannerWall) target;
-			CraftBannerWall propertyBannerWall = (CraftBannerWall) properties;
+			Directional targetBannerWall = (Directional) target;
+			Directional propertyBannerWall = (Directional) properties;
 			targetBannerWall.setFacing(propertyBannerWall.getFacing());
 			return targetBannerWall;
 		case CraftBarrel:
-			CraftBarrel targetBarrel = (CraftBarrel) target;
-			CraftBarrel propertyBarrel = (CraftBarrel) properties;
+			Directional targetBarrel = (Directional) target;
+			Directional propertyBarrel = (Directional) properties;
 			targetBarrel.setFacing(propertyBarrel.getFacing());
 			return targetBarrel;
 		case CraftBed:
@@ -315,8 +284,8 @@ public class BlockMath {
 			targetBell.setPowered(propertyBell.isPowered());
 			return targetBell;
 		case CraftBeetroot:
-			CraftBeetroot targetBeetroot = (CraftBeetroot) target;
-			CraftBeetroot propertyBeetroot = (CraftBeetroot) properties;
+			Ageable targetBeetroot = (Ageable) target;
+			Ageable propertyBeetroot = (Ageable) properties;
 			targetBeetroot.setAge(propertyBeetroot.getAge());
 			return targetBeetroot;
 		case CraftBigDripleaf:
@@ -327,8 +296,8 @@ public class BlockMath {
 			targetBigDripleaf.setTilt(propertyBigDripleaf.getTilt());
 			return targetBigDripleaf;
 		case CraftBigDripleafStem:
-			CraftBigDripleafStem targetBigDripleafStem = (CraftBigDripleafStem) target;
-			CraftBigDripleafStem propertyBigDripleafStem = (CraftBigDripleafStem) properties;
+			Dripleaf targetBigDripleafStem = (Dripleaf) target;
+			Dripleaf propertyBigDripleafStem = (Dripleaf) properties;
 			targetBigDripleafStem.setFacing(propertyBigDripleafStem.getFacing());
 			targetBigDripleafStem.setWaterlogged(propertyBigDripleafStem.isWaterlogged());
 			return targetBigDripleafStem;
@@ -357,8 +326,8 @@ public class BlockMath {
 			targetCandle.setWaterlogged(propertyCandle.isWaterlogged());
 			return targetCandle;
 		case CraftCandleCake:
-			CraftCandleCake targetCandleCake = (CraftCandleCake) target;
-			CraftCandleCake propertyCandleCake = (CraftCandleCake) properties;
+			Lightable targetCandleCake = (Lightable) target;
+			Lightable propertyCandleCake = (Lightable) properties;
 			targetCandleCake.setLit(propertyCandleCake.isLit());
 			return targetCandleCake;
 		case CraftCampfire:
@@ -370,16 +339,21 @@ public class BlockMath {
 			targetCampfire.setWaterlogged(propertyCampfire.isWaterlogged());
 			return targetCampfire;
 		case CraftCaveVines:
-			CraftCaveVines targetCaveVines = (CraftCaveVines) target;
-			CraftCaveVines propertyCaveVines = (CraftCaveVines) properties;
+			CaveVines targetCaveVines = (CaveVines) target;
+			CaveVines propertyCaveVines = (CaveVines) properties;
 			targetCaveVines.setAge(propertyCaveVines.getAge());
 			targetCaveVines.setBerries(propertyCaveVines.isBerries());
 			return targetCaveVines;
 		case CraftCaveVinesPlant:
-			CraftCaveVinesPlant targetCaveVinesPlant = (CraftCaveVinesPlant) target;
-			CraftCaveVinesPlant propertyCaveVinesPlant = (CraftCaveVinesPlant) properties;
+			CaveVinesPlant targetCaveVinesPlant = (CaveVinesPlant) target;
+			CaveVinesPlant propertyCaveVinesPlant = (CaveVinesPlant) properties;
 			targetCaveVinesPlant.setBerries(propertyCaveVinesPlant.isBerries());
 			return targetCaveVinesPlant;
+		case CraftCarrots:
+			Ageable targetCarrots = (Ageable) target;
+			Ageable propertyCarrots = (Ageable) properties;
+			targetCarrots.setAge(propertyCarrots.getAge());
+			return targetCarrots;
 		case CraftChest:
 			Chest targetChest = (Chest) target;
 			Chest propertyChest = (Chest) properties;
@@ -417,18 +391,18 @@ public class BlockMath {
 			targetComparator.setPowered(propertyComparator.isPowered());
 			return targetComparator;
 		case CraftCoralDead:
-			CraftCoralDead targetCoralDead = (CraftCoralDead) target;
-			CraftCoralDead propertyCoralDead = (CraftCoralDead) properties;
+			Waterlogged targetCoralDead = (Waterlogged) target;
+			Waterlogged propertyCoralDead = (Waterlogged) properties;
 			targetCoralDead.setWaterlogged(propertyCoralDead.isWaterlogged());
 			return targetCoralDead;
 		case CraftCoralFan:
-			CraftCoralFan targetCoralFan = (CraftCoralFan) target;
-			CraftCoralFan propertyCoralFan = (CraftCoralFan) properties;
+			Waterlogged targetCoralFan = (Waterlogged) target;
+			Waterlogged propertyCoralFan = (Waterlogged) properties;
 			targetCoralFan.setWaterlogged(propertyCoralFan.isWaterlogged());
 			return targetCoralFan;
 		case CraftCoralFanAbstract:
-			CraftCoralFanAbstract targetCoralFanAbstract = (CraftCoralFanAbstract) target;
-			CraftCoralFanAbstract propertyCoralFanAbstract = (CraftCoralFanAbstract) properties;
+			Waterlogged targetCoralFanAbstract = (Waterlogged) target;
+			Waterlogged propertyCoralFanAbstract = (Waterlogged) properties;
 			targetCoralFanAbstract.setWaterlogged(propertyCoralFanAbstract.isWaterlogged());
 			return targetCoralFanAbstract;
 		case CraftCoralFanWall:
@@ -438,14 +412,14 @@ public class BlockMath {
 			targetCoralWallFan.setWaterlogged(propertyCoralWallFan.isWaterlogged());
 			return targetCoralWallFan;
 		case CraftCoralFanWallAbstract:
-			CraftCoralFanWallAbstract targetCoralWallFanAbstract = (CraftCoralFanWallAbstract) target;
-			CraftCoralFanWallAbstract propertyCoralWallFanAbstract = (CraftCoralFanWallAbstract) properties;
+			CoralWallFan targetCoralWallFanAbstract = (CoralWallFan) target;
+			CoralWallFan propertyCoralWallFanAbstract = (CoralWallFan) properties;
 			targetCoralWallFanAbstract.setFacing(propertyCoralWallFanAbstract.getFacing());
 			targetCoralWallFanAbstract.setWaterlogged(propertyCoralWallFanAbstract.isWaterlogged());
 			return targetCoralWallFanAbstract;
 		case CraftCoralPlant:
-			CraftCoralPlant targetCoralPlant = (CraftCoralPlant) target;
-			CraftCoralPlant propertyCoralPlant = (CraftCoralPlant) properties;
+			Waterlogged targetCoralPlant = (Waterlogged) target;
+			Waterlogged propertyCoralPlant = (Waterlogged) properties;
 			targetCoralPlant.setWaterlogged(propertyCoralPlant.isWaterlogged());
 			return targetCoralPlant;
 		case CraftDaylightDetector:
@@ -460,8 +434,8 @@ public class BlockMath {
 			targetDirectional.setFacing(propertyDirectional.getFacing());
 			return targetDirectional;
 		case CraftDirtSnow:
-			CraftDirtSnow targetPodzol = (CraftDirtSnow) target;
-			CraftDirtSnow propertyPodzol = (CraftDirtSnow) properties;
+			Snowable targetPodzol = (Snowable) target;
+			Snowable propertyPodzol = (Snowable) properties;
 			targetPodzol.setSnowy(propertyPodzol.isSnowy());
 			return targetPodzol;
 		case CraftDispenser:
@@ -532,8 +506,8 @@ public class BlockMath {
 			targetGate.setPowered(propertyGate.isPowered());
 			return targetGate;
 		case CraftFloorSign:
-			CraftFloorSign targetFloorSign = (CraftFloorSign) target;
-			CraftFloorSign propertyFloorSign = (CraftFloorSign) properties;
+			Sign targetFloorSign = (Sign) target;
+			Sign propertyFloorSign = (Sign) properties;
 			targetFloorSign.setRotation(propertyFloorSign.getRotation());
 			targetFloorSign.setWaterlogged(propertyFloorSign.isWaterlogged());
 			return targetFloorSign;
@@ -545,13 +519,13 @@ public class BlockMath {
 			targetGlassPane.setWaterlogged(propertyGlassPane.isWaterlogged());
 			return targetGlassPane;
 		case CraftGlazedTerracotta:
-			CraftGlazedTerracotta targetGlazedTerracotta = (CraftGlazedTerracotta) target;
-			CraftGlazedTerracotta propertyGlazedTerracotta = (CraftGlazedTerracotta) properties;
+			Directional targetGlazedTerracotta = (Directional) target;
+			Directional propertyGlazedTerracotta = (Directional) properties;
 			targetGlazedTerracotta.setFacing(propertyGlazedTerracotta.getFacing());
 			return targetGlazedTerracotta;
 		case CraftGrass:
-			CraftGrass targetGrass = (CraftGrass) target;
-			CraftGrass propertyGrass = (CraftGrass) properties;
+			Snowable targetGrass = (Snowable) target;
+			Snowable propertyGrass = (Snowable) properties;
 			targetGrass.setSnowy(propertyGrass.isSnowy());
 			return propertyGrass;
 		case CraftGrindstone:
@@ -561,8 +535,8 @@ public class BlockMath {
 			targetGrindstone.setFacing(propertyGrindstone.getFacing());
 			return targetGrindstone;
 		case CraftHangingRoots:
-			CraftHangingRoots targetHangingRoots = (CraftHangingRoots) target;
-			CraftHangingRoots propertyHangingRoots = (CraftHangingRoots) properties;
+			Waterlogged targetHangingRoots = (Waterlogged) target;
+			Waterlogged propertyHangingRoots = (Waterlogged) properties;
 			targetHangingRoots.setWaterlogged(propertyHangingRoots.isWaterlogged());
 			return targetHangingRoots;
 		case CraftHopper:
@@ -572,14 +546,14 @@ public class BlockMath {
 			targetHopper.setFacing(propertyHopper.getFacing());
 			return targetHopper;
 		case CraftHugeMushroom:
-			CraftHugeMushroom targetHugeMushroom = (CraftHugeMushroom) target;
-			CraftHugeMushroom propertyHugeMushroom = (CraftHugeMushroom) properties;
+			MultipleFacing targetHugeMushroom = (MultipleFacing) target;
+			MultipleFacing propertyHugeMushroom = (MultipleFacing) properties;
 			for(BlockFace face : propertyHugeMushroom.getFaces())
 				targetHugeMushroom.setFace(face, propertyHugeMushroom.hasFace(face));
 			return targetHugeMushroom;
 		case CraftIceFrost:
-			CraftIceFrost targetIceFrost = (CraftIceFrost) target;
-			CraftIceFrost propertyIceFrost = (CraftIceFrost) properties;
+			Ageable targetIceFrost = (Ageable) target;
+			Ageable propertyIceFrost = (Ageable) properties;
 			targetIceFrost.setAge(propertyIceFrost.getAge());
 			return targetIceFrost;
 		case CraftJigsaw:
@@ -588,8 +562,8 @@ public class BlockMath {
 			targetJigsaw.setOrientation(propertyJigsaw.getOrientation());
 			return targetJigsaw;
 		case CraftKelp:
-			CraftKelp targetKelp = (CraftKelp) target;
-			CraftKelp propertyKelp = (CraftKelp) properties;
+			Ageable targetKelp = (Ageable) target;
+			Ageable propertyKelp = (Ageable) properties;
 			targetKelp.setAge(propertyKelp.getAge());
 			return targetKelp;
 		case CraftLadder:
@@ -667,14 +641,19 @@ public class BlockMath {
 			targetPistonHead.setShort(propertyPistonHead.isShort());
 			targetPistonHead.setType(propertyPistonHead.getType());
 			return targetPistonHead;
+		case CraftPotatoes:
+			Ageable targetPotatoes = (Ageable) target;
+			Ageable propertyPotatoes = (Ageable) properties;
+			targetPotatoes.setAge(propertyPotatoes.getAge());
+			return targetPotatoes;
 		case CraftPowerable:
 			Powerable targetPowerable = (Powerable) target;
 			Powerable propertyPowerable = (Powerable) properties;
 			targetPowerable.setPowered(propertyPowerable.isPowered());
 			return targetPowerable;
 		case CraftPressurePlateBinary:
-			CraftPressurePlateBinary targetPressurePlateBinary = (CraftPressurePlateBinary) target;
-			CraftPressurePlateBinary propertyPressurePlateBinary = (CraftPressurePlateBinary) properties;
+			Powerable targetPressurePlateBinary = (Powerable) target;
+			Powerable propertyPressurePlateBinary = (Powerable) properties;
 			targetPressurePlateBinary.setPowered(propertyPressurePlateBinary.isPowered());
 			return targetPressurePlateBinary;
 		case CraftRail:
@@ -683,8 +662,8 @@ public class BlockMath {
 			targetRail.setShape(propertyRail.getShape());
 			return targetRail;
 		case CraftRedstoneOre:
-			CraftRedstoneOre targetRedstoneOre = (CraftRedstoneOre) target;
-			CraftRedstoneOre propertyRedstoneOre = (CraftRedstoneOre) properties;
+			Lightable targetRedstoneOre = (Lightable) target;
+			Lightable propertyRedstoneOre = (Lightable) properties;
 			targetRedstoneOre.setLit(propertyRedstoneOre.isLit());
 			return targetRedstoneOre;
 		case CraftRedstoneRail:
@@ -707,8 +686,8 @@ public class BlockMath {
 				targetRedstoneWire.setFace(face, propertyRedstoneWire.getFace(face));
 			return targetRedstoneWire;
 		case CraftReed:
-			CraftReed targetReed = (CraftReed) target;
-			CraftReed propertyReed = (CraftReed) properties;
+			Ageable targetReed = (Ageable) target;
+			Ageable propertyReed = (Ageable) properties;
 			targetReed.setAge(propertyReed.getAge());
 			return targetReed;
 		case CraftRepeater:
@@ -725,8 +704,8 @@ public class BlockMath {
 			targetRespawnAnchor.setCharges(propertyRespawnAnchor.getCharges());
 			return targetRespawnAnchor;
 		case CraftRotatable:
-			CraftRotatable targetRotatable = (CraftRotatable) target;
-			CraftRotatable propertyRotatable = (CraftRotatable) properties;
+			Orientable targetRotatable = (Orientable) target;
+			Orientable propertyRotatable = (Orientable) properties;
 			targetRotatable.setAxis(propertyRotatable.getAxis());
 			return targetRotatable;
 		case CraftSapling:
@@ -748,8 +727,8 @@ public class BlockMath {
 			targetSeaPickle.setWaterlogged(propertySeaPickle.isWaterlogged());
 			return targetSeaPickle;
 		case CraftShulkerBox:
-			CraftShulkerBox targetShulkerBox = (CraftShulkerBox) target;
-			CraftShulkerBox propertyShulkerBox = (CraftShulkerBox) properties;
+			Directional targetShulkerBox = (Directional) target;
+			Directional propertyShulkerBox = (Directional) properties;
 			targetShulkerBox.setFacing(propertyShulkerBox.getFacing());
 			return targetShulkerBox;
 		case CraftSign:
@@ -758,13 +737,12 @@ public class BlockMath {
 			targetSign.setRotation(propertySign.getRotation());
 			targetSign.setWaterlogged(propertySign.isWaterlogged());
 			return targetSign;
-			//TODO: Glass Panes to stained glass panes.
-			//TODO: Cave vines to vines.
 		case CraftStainedGlassPane:
-			CraftStainedGlassPane targetPane = (CraftStainedGlassPane) target;
-			CraftStainedGlassPane propertyPane = (CraftStainedGlassPane) properties;
+			GlassPane targetPane = (GlassPane) target;
+			GlassPane propertyPane = (GlassPane) properties;
 			for(BlockFace face : propertyPane.getFaces())
 				targetPane.setFace(face, propertyPane.hasFace(face));
+			targetPane.setWaterlogged(propertyPane.isWaterlogged());
 			return targetPane;
 		case CraftStairs:
 			Stairs targetStairs = (Stairs) target;
@@ -775,8 +753,8 @@ public class BlockMath {
 			targetStairs.setWaterlogged(propertyStairs.isWaterlogged());
 			return targetStairs;
 		case CraftSmallDripleaf:
-			CraftSmallDripleaf targetSmallDripleaf = (CraftSmallDripleaf) target;
-			CraftSmallDripleaf propertySmallDripleaf = (CraftSmallDripleaf) properties;
+			SmallDripleaf targetSmallDripleaf = (SmallDripleaf) target;
+			SmallDripleaf propertySmallDripleaf = (SmallDripleaf) properties;
 			targetSmallDripleaf.setFacing(propertySmallDripleaf.getFacing());
 			targetSmallDripleaf.setHalf(propertySmallDripleaf.getHalf());
 			targetSmallDripleaf.setWaterlogged(propertySmallDripleaf.isWaterlogged());
@@ -803,8 +781,8 @@ public class BlockMath {
 			targetStructureBlock.setMode(propertyStructureBlock.getMode());
 			return targetStructureBlock;
 		case CraftSweetBerryBush:
-			CraftSweetBerryBush targetSweetBerryBush = (CraftSweetBerryBush) target;
-			CraftSweetBerryBush propertySweetBerryBush = (CraftSweetBerryBush) properties;
+			Ageable targetSweetBerryBush = (Ageable) target;
+			Ageable propertySweetBerryBush = (Ageable) properties;
 			targetSweetBerryBush.setAge(propertySweetBerryBush.getAge());
 			return targetSweetBerryBush;
 		case CraftSwitch:
@@ -815,8 +793,8 @@ public class BlockMath {
 			targetSwitch.setPowered(propertySwitch.isPowered());
 			return targetSwitch;
 		case CraftTallPlantFlower:
-			CraftTallPlantFlower targetTallPlantFlower = (CraftTallPlantFlower) target;
-			CraftTallPlantFlower propertyTallPlantFlower = (CraftTallPlantFlower) properties;
+			Bisected targetTallPlantFlower = (Bisected) target;
+			Bisected propertyTallPlantFlower = (Bisected) properties;
 			targetTallPlantFlower.setHalf(propertyTallPlantFlower.getHalf());
 			return targetTallPlantFlower;
 		case CraftTechnicalPiston:
@@ -862,8 +840,8 @@ public class BlockMath {
 			targetTurtleEgg.setHatch(propertyTurtleEgg.getHatch());
 			return targetTurtleEgg;
 		case CraftTwistingVines:
-			CraftTwistingVines targetTwistingVines = (CraftTwistingVines) target;
-			CraftTwistingVines propertyTwistingVines = (CraftTwistingVines) properties;
+			Ageable targetTwistingVines = (Ageable) target;
+			Ageable propertyTwistingVines = (Ageable) properties;
 			targetTwistingVines.setAge(propertyTwistingVines.getAge());
 			return targetTwistingVines;
 		case CraftWallSign:
@@ -877,35 +855,39 @@ public class BlockMath {
 			Waterlogged propertyWaterlogged = (Waterlogged) properties;
 			targetWaterlogged.setWaterlogged(propertyWaterlogged.isWaterlogged());
 			return targetWaterlogged;
-			//TODO: Make Copper slabs and stairs transfer blockdata with normal slabs and stairs.
-			//TODO: Make stone and wooden buttons transfer blockdata with eachother.
 		case CraftWeatheringCopperSlab:
-			CraftWeatheringCopperSlab targetWeatheringSlab = (CraftWeatheringCopperSlab) target;
-			CraftWeatheringCopperSlab propertyWeatheringSlab = (CraftWeatheringCopperSlab) properties;
+			Slab targetWeatheringSlab = (Slab) target;
+			Slab propertyWeatheringSlab = (Slab) properties;
 			targetWeatheringSlab.setWaterlogged(propertyWeatheringSlab.isWaterlogged());
 			targetWeatheringSlab.setType(propertyWeatheringSlab.getType());
 			return targetWeatheringSlab;
 		case CraftWeatheringCopperStair:
-			CraftWeatheringCopperStair targetWeatheringStair = (CraftWeatheringCopperStair) target;
-			CraftWeatheringCopperStair propertyWeatheringStair = (CraftWeatheringCopperStair) properties;
+			Stairs targetWeatheringStair = (Stairs) target;
+			Stairs propertyWeatheringStair = (Stairs) properties;
 			targetWeatheringStair.setFacing(propertyWeatheringStair.getFacing());
 			targetWeatheringStair.setHalf(propertyWeatheringStair.getHalf());
 			targetWeatheringStair.setShape(propertyWeatheringStair.getShape());
 			targetWeatheringStair.setWaterlogged(propertyWeatheringStair.isWaterlogged());
 			return targetWeatheringStair;
 		case CraftWeepingVines:
-			CraftWeepingVines targetWeepingVine = (CraftWeepingVines) target;
-			CraftWeepingVines propertyWeepingVine = (CraftWeepingVines) properties;
+			Ageable targetWeepingVine = (Ageable) target;
+			Ageable propertyWeepingVine = (Ageable) properties;
 			targetWeepingVine.setAge(propertyWeepingVine.getAge());
 			return targetWeepingVine;
 		case CraftWoodButton:
-			CraftWoodButton targetWoodButton = (CraftWoodButton) target;
-			CraftWoodButton propertyWoodButton = (CraftWoodButton) properties;
-			targetWoodButton.setFace(propertyWoodButton.getFace());
+			Switch targetWoodButton = (Switch) target;
+			Switch propertyWoodButton = (Switch) properties;
 			targetWoodButton.setAttachedFace(propertyWoodButton.getAttachedFace());
 			targetWoodButton.setFacing(propertyWoodButton.getFacing());
 			targetWoodButton.setPowered(propertyWoodButton.isPowered());
 			return targetWoodButton;
+		case CraftStoneButton:
+			Switch targetStoneButton = (Switch) target;
+			Switch propertyStoneButton = (Switch) properties;
+			targetStoneButton.setAttachedFace(propertyStoneButton.getAttachedFace());
+			targetStoneButton.setFacing(propertyStoneButton.getFacing());
+			targetStoneButton.setPowered(propertyStoneButton.isPowered());
+			return targetStoneButton;
 		case CraftCrops:
 			targetAgeable = (Ageable) target;
 			propertyAgeable = (Ageable) properties;
@@ -929,7 +911,6 @@ public class BlockMath {
 				materialString = materialString.split("<")[0];
 				customParams = customParams.replace(">", "");
 			}
-			
 			materialString = materialString.replace('|', ',');
 			// If no specified additional amounts.
 			if (materialString.split("%").length == 1) {
@@ -1113,16 +1094,16 @@ public class BlockMath {
 
 enum CLAZZ {
 	CraftAmethystCluster, CraftAnvil, CraftAgeable, CraftBanner, CraftBannerWall, CraftBamboo, CraftBarrel, CraftBed, CraftBeehive, CraftBell, CraftBeetroot, CraftBigDripleaf, CraftBigDripleafStem, 
-	CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCandle, CraftCandleCake, CraftCampfire, CraftCaveVines, CraftCaveVinesPlant,  CraftChain,
+	CraftBisected, CraftBlockData, CraftBrewingStand, CraftBubbleColumn, CraftCake, CraftCandle, CraftCandleCake, CraftCampfire, CraftCaveVines, CraftCaveVinesPlant, CraftCarrots, CraftChain,
 	CraftChest, CraftCobbleWall, CraftCocoa, CraftCommandBlock, CraftComparator, CraftCoralDead, CraftCoralFan, CraftCoralFanAbstract, CraftCoralFanWall, CraftCoralFanWallAbstract, 
 	CraftDaylightDetector, CraftDirectional, CraftDirtSnow, CraftDispenser, CraftDoor, CraftEnderChest, CraftEndPortalFrame,
 	CraftCoralPlant, CraftFaceAttachable, CraftFarmland, CraftFence, CraftFenceGate, CraftFloorSign, CraftFire, CraftFluids, CraftFurnaceFurace,
 	CraftGlassPane, CraftGlazedTerracotta, CraftGrass, CraftGrindstone, CraftHangingRoots, CraftHopper, CraftHugeMushroom, CraftIceFrost, CraftJigsaw, CraftKelp, CraftJukebox, CraftLadder, CraftLantern, CraftLeaves,
 	CraftLectern, CraftLevelled, CraftLightable, CraftMultipleFacing, CraftNote, CraftObserver, CraftOpenable,
-	CraftOrientable, CraftPiston, CraftPistonHead, CraftPowerable, CraftPressurePlateBinary, CraftRail, CraftRedstoneOre, CraftRedstoneRail, CraftRedstoneWallTorch,
+	CraftOrientable, CraftPiston, CraftPistonHead, CraftPotatoes, CraftPowerable, CraftPressurePlateBinary, CraftRail, CraftRedstoneOre, CraftRedstoneRail, CraftRedstoneWallTorch,
 	CraftRedstoneWire, CraftReed, CraftRepeater, CraftRespawnAnchor, CraftRotatable, CraftSapling, CraftScaffolding,
 	CraftSeaPickle, CraftShulkerBox, CraftSign, CraftStainedGlassPane, CraftStairs, CraftSmallDripleaf, CraftSnow, CraftSnowable, CraftStepAbstract, CraftStructureBlock, CraftSweetBerryBush,
 	CraftSwitch, CraftTallPlantFlower, CraftTechnicalPiston, CraftTNT, CraftTrapdoor, CraftTripwire, CraftTripwireHook, CraftTurtleEgg, CraftTwistingVines,
-	CraftWallSign, CraftWaterlogged, CraftWeatheringCopperSlab, CraftWeatheringCopperStair, CraftWeepingVines, CraftWoodButton, CraftCrops
+	CraftWallSign, CraftWaterlogged, CraftWeatheringCopperSlab, CraftWeatheringCopperStair, CraftWeepingVines, CraftWoodButton, CraftStoneButton, CraftCrops
 
 }

@@ -98,7 +98,13 @@ public class Commands implements CommandExecutor{
 			ItemMeta meta = item.getItemMeta();
 			meta.setLore(getPaintLore(nbti));
 			item.setItemMeta(meta);
-			p.getInventory().addItem(item);
+			ItemStack heldItem = p.getInventory().getItemInMainHand();
+			if(heldItem == null || heldItem.getType() == Material.AIR)
+				p.getInventory().setItem(p.getInventory().getHeldItemSlot(), item);
+			else {
+				p.getInventory().setItem(p.getInventory().getHeldItemSlot(), item);
+				p.getInventory().addItem(heldItem);
+			}
 			return true;
 		}else if(args[0].equalsIgnoreCase("snowtool")) {
 			if(!sender.hasPermission("bt.create")) {

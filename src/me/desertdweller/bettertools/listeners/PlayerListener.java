@@ -97,8 +97,6 @@ public class PlayerListener implements Listener{
 
 		Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
 		
-		
-		
 		setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
 	}
 	
@@ -136,7 +134,7 @@ public class PlayerListener implements Listener{
 	
 	private static boolean setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
 		//If the blocks are of the same type, (ie both walls), then transfer data from the previous block to the other.
-		if(!customProps && targetBlock.getBlockData().getClass().equals(targetData.getClass())) {
+		if(!customProps && (targetBlock.getBlockData().getClass().equals(targetData.getClass())) || checkSimilarClasses(targetBlock, targetData)) {
 			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
 		}
 		//This would be null if there was an error in trying to transfer data from one block to another.
@@ -145,6 +143,30 @@ public class PlayerListener implements Listener{
 		targetBlock.setBlockData(targetData, updates);
 		return true;
 	}
+	
+	//This allows for classes that are for some reason (thx mojang) not part of the same class. Such as copper stairs, and other stairs. Or all of the crops.
+	private static boolean checkSimilarClasses(Block targetBlock, BlockData targetData) {
+		String targetBlockClassName = targetBlock.getBlockData().getClass().getSimpleName();
+		String targetPropertiesClassName = targetData.getClass().getSimpleName();
+		if(targetBlockClassName.contains("Stair") && targetPropertiesClassName.contains("Stair"))
+			return true;
+		if(targetBlockClassName.contains("Slab") && targetPropertiesClassName.contains("Slab"))
+			return true;
+		if(targetBlockClassName.contains("Button") && targetPropertiesClassName.contains("Button"))
+			return true;
+		if(targetBlockClassName.contains("Pane") && targetPropertiesClassName.contains("Pane"))
+			return true;
+		if((targetBlockClassName.equals("CraftCrops") || targetBlockClassName.equals("CraftBeetroots") || targetBlockClassName.equals("CraftPotatoes") || targetBlockClassName.equals("CraftCarrots")) 
+				&& (targetPropertiesClassName.equals("CraftCrops") || targetPropertiesClassName.equals("CraftBeetroots") || targetPropertiesClassName.equals("CraftPotatoes") || targetPropertiesClassName.equals("CraftCarrots")))
+			return true;
+		return false;
+	}
+	//TODO: Cave vines to vines.
+	//TODO: Iron bars and glass panes
+	
+	//TODO: Make multi block blocks place correctly
+	//TODO: Make slab smooth brush
+	//TODO: Look into proper smooth brushes
 	
 	@EventHandler
 	public static void onPlayerItemHoldEvent(PlayerItemHeldEvent e){
