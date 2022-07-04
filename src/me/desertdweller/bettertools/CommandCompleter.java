@@ -66,18 +66,27 @@ public class CommandCompleter implements TabCompleter{
 			results.add("radius: 1 - " + plugin.getConfig().getString("maxRadius"));
 		}else if(args.length == 2 && args[0].equals("mask")) {
 			results.addAll(getPossibleBlocks(args[1]));
+			results.add("#none");
+			results.add("#empty");
+			results.add("#off");
+			results.add("#clear");
 		}else if(args.length == 2 && args[0].equals("blocks")) {
 			results.addAll(getPossibleBlocks(args[1]));
 		}else if(args.length == 2 && args[0].equals("through")) {
 			results.addAll(getPossibleBlocks(args[1]));
 		}else if(args.length == 2 && args[0].equals("touching")) {
 			results.addAll(getPossibleBlocks(args[1]));
+			results.add("#any");
+			results.add("#empty");
+			results.add("#off");
+			results.add("#clear");
 		}else if(args.length == 2 && args[0].equals("blockupdates")) {
 			results = prunePossibilities(boolArguments,args[1]);
 		}else if(args[0].equals("noise")) {
 			if(args.length == 2) {
 				results.add("scale (any decimal number)");
-				results.add("off");
+				results.add("#off");
+				results.add("#clear");
 			}
 			if(args.length == 3)
 				results.add("xscew: (any decimal number)");
@@ -92,16 +101,10 @@ public class CommandCompleter implements TabCompleter{
 			if(args.length == 8)
 				results.add("frequency: (any decimal number)");
 			if(args.length == 9) {
-				results.add("none");
 				results.add("turb");
 				results.add("perlin");
 			}
 		}
-		
-		
-		
-		
-		
 		return results;
 	}
 

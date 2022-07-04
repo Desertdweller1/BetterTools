@@ -21,7 +21,11 @@ import net.md_5.bungee.api.ChatColor;
 public class Commands implements CommandExecutor{
 	private static BetterTools plugin = BetterTools.getPlugin(BetterTools.class);
 	//TODO: Add Fill holes world edit command
-
+	//TODO: Hueblock generator
+	//TODO: Gradient brush tie into hueblock generator
+	//TODO: A format for matching mask to blocks
+	//TODO: --Add '#' onto the front of all inputs that aren't blocks, like clearing a brush
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
@@ -212,7 +216,7 @@ public class Commands implements CommandExecutor{
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
 				if(args.length > 1) {
-					if(args[1].equalsIgnoreCase("empty") || args[1].equalsIgnoreCase("none") || args[1].equalsIgnoreCase("off")) {
+					if(args[1].equalsIgnoreCase("#empty") || args[1].equalsIgnoreCase("#none") || args[1].equalsIgnoreCase("#off") || args[1].equalsIgnoreCase("#clear")) {
 						nbti.setString("Mask", "empty");
 						p.sendMessage("Mask cleared");
 					}else {
@@ -230,7 +234,7 @@ public class Commands implements CommandExecutor{
 					p.getInventory().setItemInMainHand(item);
 				}else {
 					p.sendMessage(ChatColor.WHITE + "/bt mask <block list>");
-					p.sendMessage(ChatColor.WHITE + "Ex: '/bt mask air,stone,white_wool', or '/bt mask empty'");
+					p.sendMessage(ChatColor.WHITE + "Ex: '/bt mask air,stone,white_wool', or '/bt mask #empty'");
 				}
 			}else {
 				p.sendMessage(ChatColor.RED + "You are not holding a BT tool. Find one or use /bt tool");
@@ -432,7 +436,7 @@ public class Commands implements CommandExecutor{
 							meta.setLore(getSnowLore(nbti));
 						item.setItemMeta(meta);
 						p.getInventory().setItemInMainHand(item);
-					}else if(invalidName.equalsIgnoreCase("any") || invalidName.equalsIgnoreCase("empty") || invalidName.equalsIgnoreCase("off")){
+					}else if(invalidName.equalsIgnoreCase("#any") || invalidName.equalsIgnoreCase("#empty") || invalidName.equalsIgnoreCase("#off") || args[1].equalsIgnoreCase("#clear")){
 						nbti.setString("Touching", "");
 						ItemStack item = nbti.getItem();
 						ItemMeta meta = item.getItemMeta();
@@ -466,7 +470,7 @@ public class Commands implements CommandExecutor{
 			}
 			NBTItem nbti = new NBTItem(p.getInventory().getItemInMainHand());
 			if(nbti.hasKey("Plugin") && nbti.getString("Plugin").equals("BetterTools")) {
-				if(args.length == 2 && args[1].equals("off")) {
+				if(args.length == 2 && (args[1].equalsIgnoreCase("#off") || args[1].equalsIgnoreCase("#clear"))) {
 					Noise noise = new Noise(nbti.getString("Noise"));
 					noise.method = "none";
 					nbti.setString("Noise", noise.toString());
@@ -572,7 +576,7 @@ public class Commands implements CommandExecutor{
 	sender.sendMessage(ChatColor.GOLD + "/bt refreshtool");
 	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will update the lore and data on it. Helpful for updating pre-existing tools for a different version of BetterTools");
 	sender.sendMessage(ChatColor.GOLD + "/bt noise <scale> <xskew> <yskew> <zskew> <min> <max> <frequency> <none/turb/perlin)>");
-	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will make the tool follow a noise generation algorithm to choose blocks (after checking the tool masks). If the tool has a noise algorithm already assigned, use '/bt noise off', or set the method as none to remove it again. For more information, you can use /bt help <parameter name> to find out more about what the parameter does.");
+	sender.sendMessage(ChatColor.GRAY + "While holding a tool, this command will make the tool follow a noise generation algorithm to choose blocks (after checking the tool masks). If the tool has a noise algorithm already assigned, use '/bt noise #off', or set the method as none to remove it again. For more information, you can use /bt help <parameter name> to find out more about what the parameter does.");
 	sender.sendMessage(ChatColor.GOLD + "/bt undo [amount]");
 	sender.sendMessage(ChatColor.GRAY + "This will undo your previous action. Up to 200 times. Input a number to do more than one at a time.");
 	sender.sendMessage(ChatColor.GOLD + "/bt help <parameter/concept>");

@@ -1,6 +1,6 @@
 name: BetterTools
 main: me.desertdweller.bettertools.BetterTools
-version: 0.1.12
+version: 0.1.13
 author: Desertdweller
 api-version: 1.13
 depend: [NBTAPI]
