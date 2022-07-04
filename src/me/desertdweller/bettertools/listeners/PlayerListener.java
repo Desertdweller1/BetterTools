@@ -25,6 +25,7 @@ import de.tr7zw.nbtapi.NBTItem;
 import me.desertdweller.bettertools.BetterTools;
 import me.desertdweller.bettertools.math.BTBMeta;
 import me.desertdweller.bettertools.math.BlockUtils;
+import me.desertdweller.bettertools.math.StringUtils;
 import me.desertdweller.bettertools.math.Noise;
 import me.desertdweller.bettertools.undo.Alteration;
 import me.desertdweller.bettertools.undo.ChangeTracker;
@@ -66,7 +67,7 @@ public class PlayerListener implements Listener{
 			medium.add(Material.AIR);
 			Block centerBlock = e.getPlayer().getTargetBlock(medium, 200);
 			List<Block> blocks;
-			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockUtils.stringToHashMap("snow,snow_block", false), new Noise(), true);
+			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),StringUtils.stringToHashMap("snow,snow_block", false), new Noise(), true);
 			
 			for(Block block : blocks) {
 				change.addBlock(block);
@@ -83,19 +84,19 @@ public class PlayerListener implements Listener{
 	}
 	
 	private static void usePaintBrush(PlayerInteractEvent e, NBTItem nbti) {
-		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockUtils.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
+		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(StringUtils.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
 		List<Block> blocks;
 		Noise noise = new Noise(nbti.getString("Noise"));
 		if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty") && !nbti.getString("Mask").equals("blocks")) {
-			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockUtils.stringToHashMap(BlockUtils.replaceSpecialStrings(nbti.getString("Mask"), nbti.getString("Blocks")), false), noise, false);
+			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),StringUtils.stringToHashMap(StringUtils.replaceSpecialStrings(nbti.getString("Mask"), nbti.getString("Blocks")), false), noise, false);
 		}else {
 			blocks = BlockUtils.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
 		}
 		if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
-			blocks = BlockUtils.getBlocksTouching(blocks, BlockUtils.stringToHashMap(nbti.getString("Touching"), false));
+			blocks = BlockUtils.getBlocksTouching(blocks, StringUtils.stringToHashMap(nbti.getString("Touching"), false));
 		}
 
-		Map<BlockData, BTBMeta> matList = BlockUtils.stringToHashMap(nbti.getString("Blocks"), true);
+		Map<BlockData, BTBMeta> matList = StringUtils.stringToHashMap(nbti.getString("Blocks"), true);
 		
 		setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
 	}
