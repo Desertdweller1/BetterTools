@@ -24,6 +24,7 @@ public class Commands implements CommandExecutor{
 	//TODO: Hueblock generator
 	//TODO: Gradient brush tie into hueblock generator
 	//TODO: A format for matching mask to blocks
+	//TODO: A command memory system, to recommend block lists that are commonly used by the player
 	//TODO: --Add '#' onto the front of all inputs that aren't blocks, like clearing a brush
 	
 	@Override

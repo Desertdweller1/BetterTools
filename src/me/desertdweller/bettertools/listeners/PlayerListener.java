@@ -86,8 +86,8 @@ public class PlayerListener implements Listener{
 		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockMath.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
 		List<Block> blocks;
 		Noise noise = new Noise(nbti.getString("Noise"));
-		if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty")) {
-			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(nbti.getString("Mask"), false), noise, false);
+		if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty") && !nbti.getString("Mask").equals("blocks")) {
+			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(BlockMath.replaceSpecialStrings(nbti.getString("Mask"), nbti.getString("Blocks")), false), noise, false);
 		}else {
 			blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
 		}

@@ -65,17 +65,17 @@ public class CommandCompleter implements TabCompleter{
 		}else if(args.length == 2 && args[0].equals("radius")) {
 			results.add("radius: 1 - " + plugin.getConfig().getString("maxRadius"));
 		}else if(args.length == 2 && args[0].equals("mask")) {
-			results.addAll(getPossibleBlocks(args[1]));
+			results.addAll(getPossibleBlocks(args[1], true));
 			results.add("#none");
 			results.add("#empty");
 			results.add("#off");
 			results.add("#clear");
 		}else if(args.length == 2 && args[0].equals("blocks")) {
-			results.addAll(getPossibleBlocks(args[1]));
+			results.addAll(getPossibleBlocks(args[1], false));
 		}else if(args.length == 2 && args[0].equals("through")) {
-			results.addAll(getPossibleBlocks(args[1]));
+			results.addAll(getPossibleBlocks(args[1], false));
 		}else if(args.length == 2 && args[0].equals("touching")) {
-			results.addAll(getPossibleBlocks(args[1]));
+			results.addAll(getPossibleBlocks(args[1], false));
 			results.add("#any");
 			results.add("#empty");
 			results.add("#off");
@@ -118,7 +118,7 @@ public class CommandCompleter implements TabCompleter{
 		return pruned;
 	}
 	
-	private List<String> getPossibleBlocks(String argument){
+	private List<String> getPossibleBlocks(String argument, Boolean addBlocksOption){
 		List<String> possibleBlocks = new ArrayList<String>();
 		
 		String beforeBlocks = "";
@@ -129,6 +129,8 @@ public class CommandCompleter implements TabCompleter{
 			if(mat.isBlock())
 				possibleBlocks.add((beforeBlocks.concat(mat.toString().toLowerCase())).replaceAll("minecraft:", ""));
 		}
+		if(addBlocksOption)
+			possibleBlocks.add(beforeBlocks.concat("#blocks"));
 		possibleBlocks = prunePossibilities(possibleBlocks, argument);
 		//If there are no nonpruned possibilities, check that the last item is an actual item, and add a comma if so.
 		if(possibleBlocks.size() == 0 && Material.getMaterial(argument.split(",")[argument.split(",").length - 1].toUpperCase()) != null) {
@@ -139,6 +141,8 @@ public class CommandCompleter implements TabCompleter{
 					if(mat.isBlock())
 						possibleBlocks.add((argument.concat(mat.toString().toLowerCase())).replaceAll("minecraft:", ""));
 				}
+				if(addBlocksOption)
+					possibleBlocks.add(argument.concat("#blocks"));
 			}
 		//If there is a bracket, then the user is likely trying to add special data, just resuggest what they have input so they know it is proper.
 		}else if(possibleBlocks.size() == 0 && argument.split(",")[argument.split(",").length - 1].contains("[")) {
