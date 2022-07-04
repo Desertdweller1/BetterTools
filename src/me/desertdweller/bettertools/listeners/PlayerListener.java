@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.nbtapi.NBTItem;
 import me.desertdweller.bettertools.BetterTools;
 import me.desertdweller.bettertools.math.BTBMeta;
-import me.desertdweller.bettertools.math.BlockMath;
+import me.desertdweller.bettertools.math.BlockUtils;
 import me.desertdweller.bettertools.math.Noise;
 import me.desertdweller.bettertools.undo.Alteration;
 import me.desertdweller.bettertools.undo.ChangeTracker;
@@ -66,11 +66,11 @@ public class PlayerListener implements Listener{
 			medium.add(Material.AIR);
 			Block centerBlock = e.getPlayer().getTargetBlock(medium, 200);
 			List<Block> blocks;
-			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap("snow,snow_block", false), new Noise(), true);
+			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockUtils.stringToHashMap("snow,snow_block", false), new Noise(), true);
 			
 			for(Block block : blocks) {
 				change.addBlock(block);
-				BlockMath.smoothSnowBlock(block);
+				BlockUtils.smoothSnowBlock(block);
 			}
 			
 			ChangeTracker tracker = ChangeTracker.getChangesForPlayer(e.getPlayer().getUniqueId());
@@ -83,19 +83,19 @@ public class PlayerListener implements Listener{
 	}
 	
 	private static void usePaintBrush(PlayerInteractEvent e, NBTItem nbti) {
-		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockMath.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
+		Block centerBlock = e.getPlayer().getTargetBlock(dataToMaterialSet(BlockUtils.stringToHashMap(nbti.getString("Through"), false).keySet()), 200);
 		List<Block> blocks;
 		Noise noise = new Noise(nbti.getString("Noise"));
 		if(nbti.hasKey("Mask") && !nbti.getString("Mask").equals("empty") && !nbti.getString("Mask").equals("blocks")) {
-			blocks = BlockMath.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockMath.stringToHashMap(BlockMath.replaceSpecialStrings(nbti.getString("Mask"), nbti.getString("Blocks")), false), noise, false);
+			blocks = BlockUtils.getNearbyBlocksMasked(centerBlock.getLocation(), nbti.getInteger("Radius"),BlockUtils.stringToHashMap(BlockUtils.replaceSpecialStrings(nbti.getString("Mask"), nbti.getString("Blocks")), false), noise, false);
 		}else {
-			blocks = BlockMath.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
+			blocks = BlockUtils.getNearbyBlocks(centerBlock.getLocation(), nbti.getInteger("Radius"), noise);
 		}
 		if(nbti.hasKey("Touching") && !nbti.getString("Touching").equals("")) {
-			blocks = BlockMath.getBlocksTouching(blocks, BlockMath.stringToHashMap(nbti.getString("Touching"), false));
+			blocks = BlockUtils.getBlocksTouching(blocks, BlockUtils.stringToHashMap(nbti.getString("Touching"), false));
 		}
 
-		Map<BlockData, BTBMeta> matList = BlockMath.stringToHashMap(nbti.getString("Blocks"), true);
+		Map<BlockData, BTBMeta> matList = BlockUtils.stringToHashMap(nbti.getString("Blocks"), true);
 		
 		setBlocksInArea(blocks, getBlockList(matList), e.getPlayer(), matList, nbti.getBoolean("Updates"));
 	}
@@ -135,7 +135,7 @@ public class PlayerListener implements Listener{
 	private static boolean setBlockData(Block targetBlock, BlockData targetData, boolean updates, boolean customProps){
 		//If the blocks are of the same type, (ie both walls), then transfer data from the previous block to the other.
 		if(!customProps && (targetBlock.getBlockData().getClass().equals(targetData.getClass())) || checkSimilarClasses(targetBlock, targetData)) {
-			targetData = BlockMath.applyProperties(targetData, targetBlock.getBlockData());
+			targetData = BlockUtils.applyProperties(targetData, targetBlock.getBlockData());
 		}
 		//This would be null if there was an error in trying to transfer data from one block to another.
 		if(targetData == null)
@@ -193,7 +193,7 @@ public class PlayerListener implements Listener{
 		if(item.getType() == Material.FILLED_MAP) {
 			e.getPlayer().getInventory().setItem(e.getNewSlot(), null);
 		}else if(!new Noise(nbti.getString("Noise")).method.equals("none")) {
-			BlockMath.givePlayerNoiseMap(e.getPlayer());
+			BlockUtils.givePlayerNoiseMap(e.getPlayer());
 		}
 	}
 

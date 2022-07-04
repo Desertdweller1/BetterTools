@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.desertdweller.bettertools.listeners.PlayerJoinListener;
 import me.desertdweller.bettertools.listeners.PlayerListener;
-import me.desertdweller.bettertools.math.BlockMath;
+import me.desertdweller.bettertools.math.BlockUtils;
 import me.desertdweller.bettertools.math.PerlinNoiseGenerator;
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
@@ -20,7 +20,7 @@ public class BetterTools extends JavaPlugin{
 		getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		noiseGen = new PerlinNoiseGenerator();
-		BlockMath.initMaterialIds();
+		BlockUtils.initMaterialIds();
 		
 	}
 	

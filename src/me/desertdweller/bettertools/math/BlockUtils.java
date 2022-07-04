@@ -99,7 +99,7 @@ import com.google.common.base.Enums;
 import de.tr7zw.nbtapi.NBTItem;
 import me.desertdweller.bettertools.Renderer;
 
-public class BlockMath {
+public class BlockUtils {
 	public static HashMap<Material, Integer> materialIds = new HashMap<Material, Integer>();
 
 	public static List<Block> getNearbyBlocks(Location location, int radius, Noise perlin) {

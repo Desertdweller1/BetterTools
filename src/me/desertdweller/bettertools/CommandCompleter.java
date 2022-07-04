@@ -11,7 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import me.desertdweller.bettertools.math.BlockMath;
+import me.desertdweller.bettertools.math.BlockUtils;
 
 public class CommandCompleter implements TabCompleter{
 	private static BetterTools plugin = BetterTools.getPlugin(BetterTools.class);
@@ -61,7 +61,7 @@ public class CommandCompleter implements TabCompleter{
 		}else if(args.length == 2 && args[0].equals("help")) {
 			results = prunePossibilities(helpArguments,args[1]);
 		}else if(args.length == 2 && args[0].equals("settool")) {
-			results = prunePossibilities(BlockMath.matArrayToStringList(Material.values()),args[1]);
+			results = prunePossibilities(BlockUtils.matArrayToStringList(Material.values()),args[1]);
 		}else if(args.length == 2 && args[0].equals("radius")) {
 			results.add("radius: 1 - " + plugin.getConfig().getString("maxRadius"));
 		}else if(args.length == 2 && args[0].equals("mask")) {
